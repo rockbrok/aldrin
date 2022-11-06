@@ -1,13 +1,185 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+#icon {
+  /* position: relative; */
+  height: 80px;
+  width: 90px;
+  transform: scale(1.5);
+  background-color: #60687c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#capsule {
+  transform: rotate(-45deg);
+  /* transform: scale(1.5); */
+  background-color: transparent;
+  position: relative;
+  /* height: 105px;
+  width: 105px; */
+  height: 60px;
+  width: 60px;
+}
+
+.wings {
+  position: absolute;
+  height: 10px;
+  width: 70px;
+  top: 30px;
+  left: 0px;
+  background-color: #222;
+}
+
+.rectangle {
+  background-color: rgb(238, 238, 238);
+  height: 20px;
+  width: 22px;
+  position: relative;
+  left: 24px;
+  top: 22px;
+}
+.oval {
+  position: absolute;
+  width: 100%;
+  height: 30%;
+  border-radius: 100%;
+}
+.top-oval {
+  background-color: rgb(238, 238, 238);
+  top: -15%;
+}
+.bottom-oval {
+  background-color: rgb(138, 131, 131);
+  bottom: -15%;
+}
+
+.white {
+  background-color: rgb(238, 238, 238);
+}
+
+.cone-oval {
+  top: 7px;
+  left: 12px;
+  width: 10px;
+  height: 3px;
+}
+
+#cone {
+  position: relative;
+  height: 35px;
+  width: 35px;
+  top: -13px;
+  left: 18px;
+  z-index: 10;
+}
+
+.cone-top {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 2px;
+  left: 3px;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 16px solid rgb(238, 238, 238);
+  border-radius: 50%;
+  transform: rotate(180deg);
+  z-index: -5;
+}
+
+#block {
+  position: absolute;
+  z-index: -5;
+  background-color: #60687c;
+}
+
+.block1 {
+  position: absolute;
+  height: 10px;
+  width: 15px;
+  top: -2px;
+  left: 10px;
+  z-index: -5;
+  background-color: #60687c;
+}
+
+.block2 {
+  height: 5px;
+  width: 5px;
+  top: 12px;
+  left: 1px;
+}
+
+.block3 {
+  height: 5px;
+  width: 5px;
+  top: 12px;
+  left: 28px;
+}
+
+#solar {
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  top: 32px;
+}
+
+.solar-1 {
+  left: 4px;
+  top: 0px;
+}
+
+.solar-2 {
+  left: 14px;
+  top: 0px;
+}
+
+.solar-3 {
+  left: 50px;
+  top: 0px;
+}
+
+.solar-4 {
+  left: 60px;
+  top: 0px;
+}
+
+.cell {
+  background-color: rgb(138, 138, 37);
+  height: 2px;
+  width: 2px;
+  position: absolute;
+}
+
+.cell-left {
+  top: 0px;
+  left: 0px;
+}
+
+.cell-bot-left {
+  bottom: 0px;
+  left: 0px;
+}
+
+.cell-right {
+  top: 0px;
+  right: 0px;
+}
+
+.cell-bot-right {
+  bottom: 0px;
+  right: 0px;
 }
