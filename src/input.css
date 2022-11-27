@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  select::-webkit-outer-spin-button,
+  select::-webkit-inner-spin-button,
+  select {
+    -webkit-appearance: none;
+    margin: 0;
+    cursor: pointer;
+    -moz-appearance: textfield !important;
+  }
+  select:focus:active {
+    cursor: pointer !important;
+  }
+}

@@ -1,25 +1,31 @@
-import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery, useLazyQuery } from "@apollo/client";
+import { GetLaunches } from '../queries/GetLaunches';
+import { FindLaunch } from "../queries/FindLaunch";
 
-const useLaunches = (state: { status: string; type: string; year: number, activePage: number; }) => {
-  const params = {
-    enabled: true,
-    keepPreviousData: true,
-    refetchOnWindowFocus: false,
-  };
+const getLaunches = (state: {
+  query: string; orbit: { value: string }; activePage: number;
+  type: { value: string }; year: { value: string },
+}) => {
+  const offset = (state.activePage - 1) * 12;
 
-  const offset = `&offset=${(state.activePage - 1) * 12}`;
+  const { loading, error, data, client } = useQuery(GetLaunches, {
+    variables: {
+      offset, year: state.year.value, type: state.type.value,
+      orbit: state.orbit.value, name: state.query
+    },
+  });
 
-  const { isLoading, error, data, refetch } = useQuery(
-    ["capsules", state.activePage],
-    async () => await axios.get("https://api.spacexdata.com/v3/launches?" + state.year + state.status + state.type + "&limit=12" + offset),
-    params
-  );
+  const count: number = Math.ceil(data?.launchesPastResult?.result?.totalCount / 12);
 
-  const items: string = data?.headers["spacex-api-count"] ?? '';
-  const itemsCount = Math.ceil(parseInt(items) / 12);
-
-  return { isLoading, error, data, refetch, itemsCount };
+  return { loading, error, data, count, offset, client };
 }
 
-export { useLaunches }
+const findLaunch = (id: string) => {
+  const [getLaunch, { loading, error, data }] = useLazyQuery(FindLaunch, {
+    variables: { id },
+  });
+
+  return { getLaunch, loading, error, data };
+}
+
+export { getLaunches, findLaunch }

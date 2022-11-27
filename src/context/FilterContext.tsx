@@ -4,9 +4,21 @@ import { createContext, useReducer } from "react";
 const FilterContext = createContext(null as any);
 
 const initialState = {
-  status: "",
-  type: "",
-  year: "",
+  orbit: {
+    value: "",
+    label: "All",
+  },
+  year: {
+    value: "",
+    label: "All",
+  },
+  type: {
+    value: "",
+    label: "All",
+  },
+  query: "",
+  limit: "",
+  placeholderCardCount: 12,
   activePage: 1,
 };
 

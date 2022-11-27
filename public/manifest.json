@@ -1,6 +1,6 @@
 {
-  "short_name": "SpaceX Launch API Search",
-  "name": "SpaceX Launch API Search",
+  "short_name": "aldrin",
+  "name": "aldrin",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
