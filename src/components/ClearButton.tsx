@@ -2,7 +2,7 @@ import { FC } from "react";
 import { ClearButtonProps } from "../interfaces/Props";
 import { Cancel, Clear } from "@mui/icons-material";
 
-const ClearButton: FC<ClearButtonProps> = ({ setData, payload, name, func, icon }) => {
+const ClearButton: FC<ClearButtonProps> = ({ setData, payload, name, func, icon, className }) => {
 
   const Button = ({ icon }: any) => {
     switch (true) {
@@ -18,8 +18,7 @@ const ClearButton: FC<ClearButtonProps> = ({ setData, payload, name, func, icon 
   return (
     <div
       title="Clear"
-      className="flex mr-3 
-        select-none cursor-pointer"
+      className={`flex mr-3 select-none cursor-pointer ${className}`}
       onClick={() => {
         setData({
           payload: 1,
@@ -32,9 +31,7 @@ const ClearButton: FC<ClearButtonProps> = ({ setData, payload, name, func, icon 
         func();
       }}
     >
-      <Button
-        icon={icon}
-      />
+      <Button icon={icon} />
     </div>
   )
 }

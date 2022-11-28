@@ -29,28 +29,6 @@ body {
     brightness(102%) contrast(105%);
 }
 
-// SCROLLBAR
-#select ::-webkit-scrollbar-track {
-  width: 15px;
-  height: 15px;
-}
-
-#select ::-webkit-scrollbar,
-#select ::-webkit-scrollbar-corner,
-#select ::-webkit-scrollbar-track,
-#select ::-webkit-scrollbar-button:single-button {
-  background-color: #e5e5e5;
+#select ::-webkit-scrollbar {
   display: none;
-}
-
-#select ::-webkit-scrollbar-thumb {
-  background-clip: padding-box;
-  border-left: 2px solid transparent;
-  border-right: 1px solid transparent;
-  border-radius: 3px 2px 2px 3px;
-  background-color: #000;
-}
-
-#select ::-webkit-scrollbar-button:single-button {
-  height: 6px;
 }

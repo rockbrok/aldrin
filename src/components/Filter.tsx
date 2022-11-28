@@ -1,10 +1,11 @@
+import { FC, useState } from 'react';
+import { QueryProps, SearchProps } from '../interfaces/Props';
 // components
-import { useEffect, useState } from 'react';
 import { Input } from './Input';
 import { Select } from './Select';
-import { Tag } from './Tag';
+import { Tags } from './Tags';
 
-const Search = ({ state, setData }: any) => {
+const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
   const [tagsList, setTagsList] = useState([]);
 
   const createYearsList = (years: { label: number; value: string; }[]) => {
@@ -24,12 +25,6 @@ const Search = ({ state, setData }: any) => {
     createYearsList(years);
     return years;
   }
-
-  // const tagsList: { value: string | number; id: string }[] = [];
-
-  // useEffect(() => {
-  //   console.log(tagsList);
-  // }, [tagsList]);
 
   const typesList = [
     { label: "Merlin A", value: "Merlin A" },
@@ -54,10 +49,12 @@ const Search = ({ state, setData }: any) => {
   ];
 
   return (
-    <section className="grid grid-cols-4 grid-rows-3 gap-4 mb-10">
+    <section className="grid grid-cols-4 grid-rows-3 gap-4 mb-4">
       <Input
         state={state}
         setData={setData}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
       />
       <div className="grid row-start-2 col-span-3 grid-cols-3 gap-4">
         <Select
@@ -67,6 +64,8 @@ const Search = ({ state, setData }: any) => {
           helper="Year"
           setData={setData}
           state={state.year}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
         />
         <Select
           items={typesList}
@@ -75,6 +74,8 @@ const Search = ({ state, setData }: any) => {
           helper="Rocket type"
           setData={setData}
           state={state.type}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
         />
         <Select
           items={orbitsList}
@@ -83,16 +84,18 @@ const Search = ({ state, setData }: any) => {
           helper="Orbit"
           setData={setData}
           state={state.orbit}
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
         />
       </div>
-
-      <Tag
+      <Tags
         setData={setData}
         tagsList={tagsList}
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
       />
-
     </section>
   );
 };
 
-export { Search }
+export { Filter }

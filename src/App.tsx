@@ -1,38 +1,50 @@
 
-import { useContext } from 'react';
-import { FilterContext } from './context/FilterContext';
-import { getLaunches } from './hooks/useLaunches';
-// components
-import { Header } from './components/Header';
-import { Search } from './components/Search';
-import { CardList } from './components/CardList';
-import { Pagination } from "./components/Pagination";
+import FilterContextProvider from './context/FilterContext';
+import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from 'react-router-dom';
+import { Search } from "./pages/Search";
 
-const App = () => {
-  const { state, setData } = useContext(FilterContext);
-  const launches = getLaunches(state);
+const Context = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const year = params.get("year");
+  const orbit = params.get("orbit");
+  const type = params.get("type");
+  const query = params.get("q");
+
+  const initialState = {
+    orbit: {
+      value: orbit || "",
+      label: "All",
+    },
+    year: {
+      value: year || "",
+      label: "All",
+    },
+    type: {
+      value: type || "",
+      label: "All",
+    },
+    query: query || "",
+    limit: "",
+    placeholderCardCount: 12,
+    activePage: 1,
+  };
 
   return (
-    <>
-      <Header />
-      <main className="my-4 w-[900px]">
-        <Search
-          state={state}
-          setData={setData}
-        />
-        <CardList
-          state={state}
-          setData={setData}
-          launches={launches}
-        />
-        <Pagination
-          state={state}
-          setData={setData}
-          launches={launches}
-        />
-      </main>
-    </>
+    <FilterContextProvider stateVar={initialState}>
+      <Outlet />
+    </FilterContextProvider>
   );
 };
+
+const App = () => (
+  <Router>
+    <Routes>
+      <Route element={<Context />}>
+        <Route path="search/*" element={<Search />} />
+      </Route>
+    </Routes>
+  </Router>
+)
 
 export default App;

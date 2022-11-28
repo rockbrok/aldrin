@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import FilterContextProvider from './context/FilterContext';
 import {
   ApolloClient,
   InMemoryCache,
@@ -12,7 +11,7 @@ import './index.css';
 
 const client = new ApolloClient({
   uri: "https://api.spacex.land/graphql/",
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 
 const root = ReactDOM.createRoot(
@@ -22,9 +21,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <FilterContextProvider>
-        <App />
-      </FilterContextProvider>
+      <App />
     </ApolloProvider>
   </React.StrictMode>
 );

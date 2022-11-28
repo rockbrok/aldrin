@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { PaginationProps } from "../interfaces/Props";
+import { QueryProps } from "../interfaces/Props";
 import { GetLaunches } from '../queries/GetLaunches';
 
-const Pagination: FC<PaginationProps> = ({ state, launches, setData }) => {
-  return (
+const Pagination: FC<QueryProps> = ({ state, launches, setData }) => {
+  if (launches.count > 1) return (
     <nav className="flex flex-row items-center justify-center my-8">
       {Array.from({ length: launches.count }, (_, index) =>
         <Item
@@ -15,6 +15,7 @@ const Pagination: FC<PaginationProps> = ({ state, launches, setData }) => {
         />)}
     </nav>
   );
+  return <></>;
 };
 
 const Item = ({ i, setData, activePage, client }: any) => (

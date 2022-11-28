@@ -1,4 +1,3 @@
-
 import { createContext, useReducer } from "react";
 
 const FilterContext = createContext(null as any);
@@ -26,7 +25,7 @@ const ACTIONS = {
   SET: "set",
 };
 
-const reducer = (state: any, action: any) => {
+const reducer = (state: any, action: { type: string, name: string, payload: object | string | number }) => {
   switch (action.type) {
     case ACTIONS.SET:
       return {
@@ -38,10 +37,10 @@ const reducer = (state: any, action: any) => {
   }
 }
 
-const FilterContextProvider = ({ children }: any) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+const FilterContextProvider = ({ children, stateVar }: any) => {
+  const [state, dispatch] = useReducer(reducer, stateVar);
 
-  const setData = (props: { payload: any; name: any; }) => {
+  const setData = (props: { payload: object | string | number; name: string; }) => {
     dispatch({
       type: ACTIONS.SET,
       payload: props.payload,

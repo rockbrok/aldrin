@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect, useState } from 'react'
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
-import { QueryProps } from '../interfaces/Props';
+import { PopupProps } from '../interfaces/Props';
 import OutsideClickHandler from "react-outside-click-handler";
 import {
   Notes,
@@ -16,7 +16,7 @@ import {
   Close
 } from "@mui/icons-material";
 
-const Popup: FC<QueryProps> = ({ data, setChecked }) => {
+const Popup: FC<PopupProps> = ({ data, setChecked }) => {
   const nationalitiesArray: any[] = [];
   const [nationalities, setNationalities] = useState("");
 
