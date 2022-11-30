@@ -23,9 +23,9 @@ const Input: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, set
   }
 
   return (
-    <div className="flex flex-col gap-0.5 w-full row-start-1 row-end-2 col-span-2">
+    <section className="grid grid-cols-4 grid-rows-1 gap-4 mt-10">
       <div
-        className="relative row-start-1 row-end-2 col-span-3 flex flex-row"
+        className="relative col-span-3 flex flex-row"
         onClick={inputFocus}
       >
         <form
@@ -71,7 +71,7 @@ const Input: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, set
           </button>
         </form>
       </div>
-    </div>
+    </section>
   );
 }
 

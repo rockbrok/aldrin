@@ -4,7 +4,7 @@ import { SearchProps, TagProps } from '../interfaces/Props';
 import { ClearButton } from './ClearButton';
 
 const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, setSearchParams }) => (
-  <div className="grid row-start-3 col-span-3">
+  <div className="grid col-span-3">
     <div className="flex flex-row gap-4">
       {tagsList.map((item: any, index: number) => (
         <div className="flex flex-row items-center 

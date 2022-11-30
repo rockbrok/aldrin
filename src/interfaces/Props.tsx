@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
-
 interface SearchProps {
   searchParams: any;
   setSearchParams: any;
@@ -28,11 +26,6 @@ interface SelectProps {
   tagsList: { value: string | number; state: string }[];
 }
 
-interface PopupProps {
-  data?: undefined | string | object | any;
-  setChecked?: Dispatch<SetStateAction<boolean>> | any;
-}
-
 interface ClearButtonProps {
   setData: any;
   payload: { value: string; label: string } | string | number;
@@ -42,4 +35,4 @@ interface ClearButtonProps {
   className?: string;
 }
 
-export type { QueryProps, SelectProps, ClearButtonProps, TagProps, PopupProps, SearchProps }
+export type { QueryProps, SelectProps, ClearButtonProps, TagProps, SearchProps }

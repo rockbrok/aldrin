@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
+import { FC } from 'react';
+import { QueryProps, SearchProps } from '../interfaces/Props';
+// Components
+import { Input } from './Input';
 
-const Header = () => (
-  <header className="relative flex flex-col mt-4 mb-10 w-[900px] justify-between">
+const Header: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => (
+  <header className="relative flex flex-col mt-4 w-[900px] justify-between">
     <div className="select-none flex flex-row font-medium items-center">
       <Link
         to="/"
@@ -20,6 +24,12 @@ const Header = () => (
     >
       A search tool for spacex {`\n`}launches
     </h3>
+    <Input
+      state={state}
+      setData={setData}
+      searchParams={searchParams}
+      setSearchParams={setSearchParams}
+    />
   </header>
 );
 

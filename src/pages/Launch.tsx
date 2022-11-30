@@ -14,17 +14,20 @@ import {
   TaskAlt,
   Scale
 } from "@mui/icons-material";
+import { LaunchMap } from '../LaunchMap';
 
 const Launch = () => {
   const location = useLocation();
-  const launch = findLaunch(location.state.id);
+  const path = location.pathname.replace('/', '');
 
-  // const params = new URLSearchParams(location.search);
-  // const year = params.get("year");
+  function searchStringInArray() {
+    for (let i = 0; i < LaunchMap.length; i++) {
+      if (LaunchMap[i].name.match(path)) return String(LaunchMap[i].id);
+    }
+    return "";
+  }
 
-  // console.log('search param:', location.pathname)
-  // console.log(location.state.id);
-  // console.log(launch.data);
+  const launch = findLaunch(searchStringInArray() || location.state.id);
 
   const data = launch?.data?.launch
 
@@ -92,7 +95,7 @@ const Launch = () => {
       return <Error className="filter-blue" />;
     default:
       return (
-        <section className="relative grid grid-flow-row grid-cols-[6fr, 9fr] border-2 border-grey bg-grey rounded-sm p-14 gap-x-20 gap-y-6">
+        <main className="relative grid grid-flow-row grid-cols-[6fr, 9fr] border-2 border-grey bg-grey rounded-sm p-14 gap-x-20 gap-y-6">
           <div className="flex flex-col gap-4 col-start-1 col-end-2 w-min">
             <ItemList
               data={data}
@@ -106,7 +109,7 @@ const Launch = () => {
             </span>
             {data.details ?? "No details"}
           </div>
-        </section>
+        </main>
       )
   }
 }

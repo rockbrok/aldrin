@@ -1,8 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { QueryProps, SearchProps } from '../interfaces/Props';
 import { useLocation } from 'react-router-dom';
-// components
-import { Input } from './Input';
+// Components
 import { Select } from './Select';
 import { Tags } from './Tags';
 
@@ -93,14 +92,8 @@ const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, se
   ];
 
   return (
-    <section className="grid grid-cols-4 grid-rows-3 gap-4 mb-4">
-      <Input
-        state={state}
-        setData={setData}
-        searchParams={searchParams}
-        setSearchParams={setSearchParams}
-      />
-      <div className="grid row-start-2 col-span-3 grid-cols-3 gap-4">
+    <section className="grid grid-cols-4 grid-rows-2 gap-4 mb-4">
+      <div className="grid col-span-3 grid-cols-3 gap-4">
         <Select
           items={getYearsList()}
           tagsList={tagsList}

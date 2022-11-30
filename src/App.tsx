@@ -1,31 +1,22 @@
+import Context from './context/FilterContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// Pages
 import { Search } from "./pages/Search";
 import { Launch } from "./pages/Launch";
-import Context from "./context/FilterContext";
+// Components
+import { Layout } from './components/Layout';
 
 const App = () => (
   <Router basename="search">
-    <Routes>
-      <Route path="/" element={
-        <Context>
-          <Search />
-        </Context>}
-      />
-      <Route path="/:id" element={
-        <Context>
-          <Launch />
-        </Context>
-      }
-      />
-
-      {/* Bug with React Router preventing special characters. Revert to using non-wrapped routes */}
-
-      {/* <Route element={<Context />}>
-        <Route path="/" element={<Search />} />
-        <Route path="/launch@:id" element={<Launch />} />
-      </Route> */}
-    </Routes>
+    <Context>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/*" element={<Search />} />
+          <Route path="/:id" element={<Launch />} />
+        </Route>
+      </Routes>
+    </Context>
   </Router>
-)
+);
 
 export default App;

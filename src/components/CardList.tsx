@@ -2,6 +2,7 @@ import { FC, MouseEventHandler, ReactFragment, useEffect } from 'react'
 import { QueryProps } from '../interfaces/Props';
 import { RocketLaunch, Error, Block } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { LaunchMap } from '../LaunchMap';
 
 const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
   const itemsPerPage = 12;
@@ -89,9 +90,23 @@ const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
         <Grid>
           {launches.data.launchesPastResult.data.map((data:
             { mission_name: string; id: string; }, index: number) => {
+
+            // REGEX Used to convert mission_name to URL string
+            // const removeParanthesis = data.mission_name.replace(/ *\([^)]*\) */g, '');
+            // const removeNonAlphaNumericExcept = removeParanthesis.replace(/[^a-z0-9 -]/gi, '');
+            // const removeSpace = removeNonAlphaNumericExcept.replace(/ +/g, '_');
+            // const removeHyphen = removeSpace.replace(/-+/g, '_');
+
+            function searchStringInArray() {
+              for (let i = 0; i < LaunchMap.length; i++) {
+                if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
+              }
+              return "";
+            }
+
             return (
               <Link
-                to={`/${data.mission_name}`}
+                to={`/${searchStringInArray()}`}
                 state={{ id: data.id }}
                 className="w-full"
                 key={index}
