@@ -6,7 +6,7 @@ interface SearchProps {
 }
 
 interface TagProps {
-  tagsList: { value: string | number; state: string, index: number }[];
+  tagsList: { value: string | number | null; state: string }[];
   setData: (arg0: {
     payload: { value: string; label: string } | number; name: string;
   }) => void;

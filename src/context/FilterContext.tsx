@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 
 const FilterContext = createContext(null as any);
 
@@ -17,6 +18,7 @@ const initialState = {
   },
   query: "",
   limit: "",
+  // id: "",
   placeholderCardCount: 12,
   activePage: 1,
 };
@@ -55,6 +57,41 @@ const FilterContextProvider = ({ children, stateVar }: any) => {
   );
 }
 
-export default FilterContextProvider
+const Context = ({ children }: any) => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const year = params.get("year");
+  const orbit = params.get("orbit");
+  const type = params.get("type");
+  const query = params.get("q");
+
+  const initialState = {
+    orbit: {
+      value: orbit || "",
+      label: "All",
+    },
+    year: {
+      value: year || "",
+      label: "All",
+    },
+    type: {
+      value: type || "",
+      label: "All",
+    },
+    query: query || "",
+    limit: "",
+    placeholderCardCount: 12,
+    activePage: 1,
+  };
+
+  return (
+    <FilterContextProvider stateVar={initialState}>
+      {/* <Outlet /> */}
+      {children}
+    </FilterContextProvider>
+  );
+};
+
+export default Context;
 
 export { FilterContext }

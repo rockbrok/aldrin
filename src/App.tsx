@@ -1,48 +1,29 @@
-
-import FilterContextProvider from './context/FilterContext';
-import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Search } from "./pages/Search";
-
-const Context = () => {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const year = params.get("year");
-  const orbit = params.get("orbit");
-  const type = params.get("type");
-  const query = params.get("q");
-
-  const initialState = {
-    orbit: {
-      value: orbit || "",
-      label: "All",
-    },
-    year: {
-      value: year || "",
-      label: "All",
-    },
-    type: {
-      value: type || "",
-      label: "All",
-    },
-    query: query || "",
-    limit: "",
-    placeholderCardCount: 12,
-    activePage: 1,
-  };
-
-  return (
-    <FilterContextProvider stateVar={initialState}>
-      <Outlet />
-    </FilterContextProvider>
-  );
-};
+import { Launch } from "./pages/Launch";
+import Context from "./context/FilterContext";
 
 const App = () => (
-  <Router>
+  <Router basename="search">
     <Routes>
-      <Route element={<Context />}>
-        <Route path="search/*" element={<Search />} />
-      </Route>
+      <Route path="/" element={
+        <Context>
+          <Search />
+        </Context>}
+      />
+      <Route path="/:id" element={
+        <Context>
+          <Launch />
+        </Context>
+      }
+      />
+
+      {/* Bug with React Router preventing special characters. Revert to using non-wrapped routes */}
+
+      {/* <Route element={<Context />}>
+        <Route path="/" element={<Search />} />
+        <Route path="/launch@:id" element={<Launch />} />
+      </Route> */}
     </Routes>
   </Router>
 )

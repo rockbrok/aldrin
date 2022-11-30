@@ -1,12 +1,56 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { QueryProps, SearchProps } from '../interfaces/Props';
+import { useLocation } from 'react-router-dom';
 // components
 import { Input } from './Input';
 import { Select } from './Select';
 import { Tags } from './Tags';
 
 const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
-  const [tagsList, setTagsList] = useState([]);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const year = params.get("year");
+  const orbit = params.get("orbit");
+  const type = params.get("type");
+  const query = params.get("q");
+
+  interface StateProperties {
+    value: string;
+    state: string;
+  }
+
+  const [tagsList, setTagsList] = useState<StateProperties[]>([]);
+
+
+  useEffect(() => {
+
+    const func = () => {
+      if (year !== null) {
+        if ("year" in tagsList) {
+          return;
+        } else {
+          tagsList.push({ value: year, state: "year" })
+          console.log(year);
+        }
+      }
+
+      if (type !== null) {
+        tagsList.push({ value: type, state: "type" })
+      }
+      if (orbit !== null) {
+        tagsList.push({ value: orbit, state: "orbit" })
+      }
+    }
+    func();
+  }, []);
+
+  //   case type !== null:
+  //     return tagsList.push({ value: type, state: "type" });
+  //     case orbit !== null:
+  //       return tagsList.push({ value: orbit, state: "orbit" });
+  //   default:
+  //     return;
+  // }
 
   const createYearsList = (years: { label: number; value: string; }[]) => {
     for (let i = 2006; i <= 2010; i++) {

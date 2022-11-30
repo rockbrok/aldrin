@@ -1,4 +1,4 @@
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GetLaunches } from '../queries/GetLaunches';
 import { FindLaunch } from "../queries/FindLaunch";
 
@@ -21,11 +21,11 @@ const getLaunches = (state: {
 }
 
 const findLaunch = (id: string) => {
-  const [getLaunch, { loading, error, data }] = useLazyQuery(FindLaunch, {
+  const { loading, error, data } = useQuery(FindLaunch, {
     variables: { id },
   });
 
-  return { getLaunch, loading, error, data };
+  return { loading, error, data };
 }
 
 export { getLaunches, findLaunch }

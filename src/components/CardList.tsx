@@ -1,10 +1,7 @@
-import { FC, MouseEventHandler, ReactFragment, useEffect, useState } from 'react'
-import { findLaunch } from '../hooks/useLaunches';
+import { FC, MouseEventHandler, ReactFragment, useEffect } from 'react'
 import { QueryProps } from '../interfaces/Props';
-import { LazyQueryExecFunction } from '@apollo/client';
-import { RocketLaunch, Error, Cached, Block } from '@mui/icons-material';
-// components
-import { Popup } from './Popup';
+import { RocketLaunch, Error, Block } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
   const itemsPerPage = 12;
@@ -93,70 +90,35 @@ const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
           {launches.data.launchesPastResult.data.map((data:
             { mission_name: string; id: string; }, index: number) => {
             return (
-              <CardLoaded
+              <Link
+                to={`/${data.mission_name}`}
+                state={{ id: data.id }}
+                className="w-full"
                 key={index}
-                data={data}
-              />
+              >
+                <Card className="hover:bg-grey gap-8 pt-14 cursor-pointer">
+                  <RocketLaunch className="filter-blue" />
+                  <p className="flex flex-row items-start h-24">
+                    {data.mission_name}
+                  </p>
+                </Card>
+              </Link>
             );
           })}
         </Grid>
       );
   }
-
 };
 
-const CardLoaded = (data: { data: { mission_name: string, id: string } }) => {
-  const [checked, setChecked] = useState(false);
-  const launch = findLaunch(data.data.id);
-
-  const renderIcon = (launch: {
-    getLaunch?: LazyQueryExecFunction<any, { id: string; }>; loading: boolean; error: any; data?: any;
-  }) => {
-    switch (true) {
-      case launch.loading:
-        return <Cached className="animate-spin filter-blue" />;
-      case launch.error:
-        return <Error className="filter-blue" />;
-      default:
-        return <RocketLaunch className="filter-blue" />;
-    }
-  }
-
-  return (
-    <>
-      <Card
-        className="hover:bg-grey gap-8 pt-14 cursor-pointer"
-        click={async () => {
-          await launch.getLaunch();
-          setChecked(true);
-        }}
-      >
-        {renderIcon(launch)}
-        <p className="flex flex-row items-start h-24">
-          {data.data.mission_name}
-        </p>
-      </Card>
-      {checked ?
-        <Popup
-          data={launch?.data?.launch}
-          setChecked={setChecked}
-        />
-        : null}
-    </>
-  );
-};
-
-const Card = (props: { children?: ReactFragment; className?: any, click?: MouseEventHandler<HTMLDivElement> }) => {
-  return (
-    <div className={`flex flex-col items-center justify-center 
-        whitespace-normal select-none
-        h-52 w-full bg-white px-6 text-center
-        rounded-sm border-2 border-grey ${props.className}`}
-      onClick={props.click}
-    >
-      {props.children}
-    </div>
-  )
-}
+const Card = (props: { children?: ReactFragment; className?: any, click?: MouseEventHandler<HTMLDivElement> }) => (
+  <div className={`flex flex-col items-center justify-center 
+    whitespace-normal select-none
+    h-52 w-full bg-white px-6 text-center
+    rounded-sm border-2 border-grey ${props.className}`}
+    onClick={props.click}
+  >
+    {props.children}
+  </div>
+);
 
 export { CardList }
