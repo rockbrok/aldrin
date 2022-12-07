@@ -1,3 +1,9 @@
+// REGEX Used to convert mission_name to URL string
+// const removeParanthesis = data.mission_name.replace(/ *\([^)]*\) */g, '');
+// const removeNonAlphaNumericExcept = removeParanthesis.replace(/[^a-z0-9 -]/gi, '');
+// const removeSpace = removeNonAlphaNumericExcept.replace(/ +/g, '_');
+// const removeHyphen = removeSpace.replace(/-+/g, '_');
+
 export const LaunchMap = [
   { name: "Starlink_15", id: 109 },
   { name: "Sentinel_6_Michael_Freilich", id: 108 },

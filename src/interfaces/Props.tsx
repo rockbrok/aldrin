@@ -1,6 +1,7 @@
 interface SearchProps {
   searchParams: any;
   setSearchParams: any;
+  page?: boolean;
 }
 
 interface TagProps {
@@ -15,7 +16,12 @@ interface QueryProps {
   setData: (arg0: {
     payload: { value: string; label: string } | number | string; name: string;
   }) => void;
-  launches?: any;
+  launches: {
+    loading: boolean,
+    error: any,
+    data: any,
+    count: number
+  };
 }
 
 interface SelectProps {
@@ -24,6 +30,10 @@ interface SelectProps {
   helper?: string;
   showItems?: boolean;
   tagsList: { value: string | number; state: string }[];
+  state: any;
+  setData: (arg0: {
+    payload: { value: string; label: string } | number | string; name: string;
+  }) => void;
 }
 
 interface ClearButtonProps {

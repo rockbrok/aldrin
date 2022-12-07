@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { findLaunch } from '../hooks/useLaunches';
 import { Error, Cached, Block } from '@mui/icons-material';
-import { useState, useEffect, ReactElement } from 'react';
+import { useState, useEffect, ReactElement, ReactFragment, ReactNode } from 'react';
 import {
   Notes,
   FactCheck,
@@ -81,46 +81,77 @@ const Launch = () => {
     setNationality();
   }, [payloadsArray]);
 
+  const IconWrapper = (props: { children: string | ReactFragment | ReactElement }) => (
+    <div className="flex flex-col items-center justify-center mt-auto w-full mt-28">
+      {props.children}
+    </div>
+  );
+
+  const getRandomPicture = () => {
+    const pictures = data.links.flickr_images;
+    const picture = pictures[pictures.length * Math.random() | 0];
+
+    return (
+      <div className="w-80 h-80">
+        <img src={picture} alt="launch" className="w-full h-full rounded-sm" />
+      </div>
+    );
+  }
+
   switch (true) {
     case launch.loading:
-      return <Cached className="animate-spin filter-blue" />;
+      return (
+        <IconWrapper>
+          <Cached className="animate-spin filter-blue" />
+        </IconWrapper>
+      );
     case launch.data == undefined:
       return (
-        <>
+        <IconWrapper>
           <Block className="filter-blue" />
           No data
-        </>
+        </IconWrapper>
       )
     case Boolean(launch.error):
-      return <Error className="filter-blue" />;
+      return (
+        <IconWrapper>
+          <Error className="filter-blue" />
+        </IconWrapper>
+      );
     default:
       return (
-        <main className="relative grid grid-flow-row grid-cols-[6fr, 9fr] border-2 border-grey bg-grey rounded-sm p-14 gap-x-20 gap-y-6">
-          <div className="flex flex-col gap-4 col-start-1 col-end-2 w-min">
+        <main className="mt-14 mb-8 grid grid-flow-row grid-cols-[6fr, 9fr] border-2 border-grey bg-grey rounded-sm p-14 gap-x-20 gap-y-6">
+          <div className="flex flex-col gap-4 w-[300px] row-start-1 row-end-3 grid-rows-3">
+            <div className="bg-lightgrey w-full h-fit p-4 rounded-sm text-3xl">
+              {data.mission_name}
+            </div>
+
+
+            {getRandomPicture()}
+            <div className="row-span-2">
+              <span title="Details">
+                <Notes />
+              </span>
+              {data.details ?? "No details"}
+            </div>
+          </div>
+          <div className="flex flex-col gap-4 col-start-2 col-end-3 w-min">
             <ItemList
               data={data}
               nationalities={nationalities}
               payloadSum={payloadSum}
             />
           </div>
-          <div className="flex flex-row gap-4 w-[300px] row-start-1 row-end-3 col-start-2 col-end-3">
-            <span title="Details">
-              <Notes />
-            </span>
-            {data.details ?? "No details"}
-          </div>
         </main>
       )
   }
 }
 
+
+
 const ItemList = ({ data, nationalities, payloadSum }: any) => (
   <>
-    <Item
-      title="Mission name"
-      icon={<FactCheck />}
-      data={data.mission_name}
-    />
+
     <Item
       title="Rocket name"
       icon={<Assignment />}

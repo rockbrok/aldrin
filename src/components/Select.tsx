@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
-import { SelectProps, QueryProps, SearchProps } from '../interfaces/Props';
+import { SelectProps, SearchProps } from '../interfaces/Props';
 import OutsideClickHandler from "react-outside-click-handler";
 import { Sort } from "@mui/icons-material";
 
-const Select: FC<QueryProps & SelectProps & SearchProps> = ({ state, id, items, setData, helper, tagsList, searchParams, setSearchParams }) => {
+const Select: FC<SelectProps & SearchProps> = ({ state, id, items, setData, helper, tagsList, searchParams, setSearchParams }) => {
   const [showItems, setShowItems] = useState(false);
 
   return (
@@ -48,7 +48,7 @@ const Select: FC<QueryProps & SelectProps & SearchProps> = ({ state, id, items, 
   );
 };
 
-const Items: FC<QueryProps & SelectProps & SearchProps> = ({ items, state, setData, showItems, tagsList, id, searchParams, setSearchParams }) => {
+const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems, tagsList, id, searchParams, setSearchParams }) => {
 
   const spliceArray = () => {
     tagsList.map((item: { state: string; }, index: number) => {

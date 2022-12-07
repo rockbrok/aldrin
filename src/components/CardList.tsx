@@ -56,6 +56,13 @@ const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
     </div>
   );
 
+  function searchStringInArray(data: any) {
+    for (let i = 0; i < LaunchMap.length; i++) {
+      if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
+    }
+    return "";
+  }
+
   switch (true) {
     case launches.loading:
       return (
@@ -88,38 +95,21 @@ const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
     default:
       return (
         <Grid>
-          {launches.data.launchesPastResult.data.map((data:
-            { mission_name: string; id: string; }, index: number) => {
-
-            // REGEX Used to convert mission_name to URL string
-            // const removeParanthesis = data.mission_name.replace(/ *\([^)]*\) */g, '');
-            // const removeNonAlphaNumericExcept = removeParanthesis.replace(/[^a-z0-9 -]/gi, '');
-            // const removeSpace = removeNonAlphaNumericExcept.replace(/ +/g, '_');
-            // const removeHyphen = removeSpace.replace(/-+/g, '_');
-
-            function searchStringInArray() {
-              for (let i = 0; i < LaunchMap.length; i++) {
-                if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
-              }
-              return "";
-            }
-
-            return (
-              <Link
-                to={`/${searchStringInArray()}`}
-                state={{ id: data.id }}
-                className="w-full"
-                key={index}
-              >
-                <Card className="hover:bg-grey gap-8 pt-14 cursor-pointer">
-                  <RocketLaunch className="filter-blue" />
-                  <p className="flex flex-row items-start h-24">
-                    {data.mission_name}
-                  </p>
-                </Card>
-              </Link>
-            );
-          })}
+          {launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }, index: number) => (
+            <Link
+              to={`/${searchStringInArray(data)}`}
+              state={{ id: data.id }}
+              className="w-full"
+              key={index}
+            >
+              <Card className="hover:bg-grey gap-8 pt-14 cursor-pointer">
+                <RocketLaunch className="filter-blue" />
+                <p className="flex flex-row items-start h-24">
+                  {data.mission_name}
+                </p>
+              </Card>
+            </Link>
+          ))}
         </Grid>
       );
   }

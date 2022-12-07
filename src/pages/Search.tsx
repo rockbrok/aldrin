@@ -1,19 +1,18 @@
 import { useOutletContext } from 'react-router-dom';
-import { getLaunches } from '../hooks/useLaunches';
 // Components
 import { Filter } from '../components/Filter';
 import { CardList } from '../components/CardList';
 import { Pagination } from "../components/Pagination";
 
 const Search = () => {
-  const [state, setData, searchParams, setSearchParams]: any = useOutletContext();
-  const launches = getLaunches(state);
+  const [launches, state, setData, searchParams, setSearchParams]: any = useOutletContext();
 
   return (
-    <main className="my-4 w-[900px]">
+    <>
       <Filter
         state={state}
         setData={setData}
+        launches={launches}
         searchParams={searchParams}
         setSearchParams={setSearchParams}
       />
@@ -27,7 +26,7 @@ const Search = () => {
         setData={setData}
         launches={launches}
       />
-    </main>
+    </>
   );
 };
 
