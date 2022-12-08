@@ -4,13 +4,11 @@ import { QueryProps, SearchProps } from '../interfaces/Props';
 // Components
 import { Input } from './Input';
 
-const Header: FC<QueryProps & SearchProps> = ({ launches, setData, searchParams, setSearchParams }) => {
+const Header: FC<QueryProps & SearchProps> = ({ launches, state, setData, searchParams, setSearchParams }) => {
   const [page, setPage] = useState(false);
   const routes = [{ path: "/:id" }]
   const location = useLocation();
   const route = matchRoutes(routes, location);
-
-  console.log(route);
 
   const routeTest = () => {
     if (route !== null) {
@@ -22,12 +20,9 @@ const Header: FC<QueryProps & SearchProps> = ({ launches, setData, searchParams,
     routeTest();
   }, [location])
 
-  console.log(page);
-
-
   return (
     <header className="relative flex flex-col mt-4 w-[900px] justify-between">
-      <div className="select-none flex flex-row font-medium items-center justify-between">
+      <div className="select-none grid grid-cols-2 gap-4 font-medium items-center h-9">
         <div className="flex flex-row items-end">
           <Link to="/" reloadDocument>
             <h1 className="text-yellow w-fit px-2 text-2xl cursor-pointer">
@@ -41,6 +36,7 @@ const Header: FC<QueryProps & SearchProps> = ({ launches, setData, searchParams,
         {page ?
           <Input
             page={page}
+            state={state}
             launches={launches}
             setData={setData}
             searchParams={searchParams}
@@ -50,13 +46,14 @@ const Header: FC<QueryProps & SearchProps> = ({ launches, setData, searchParams,
       {page ?
         null :
         <>
-          <h3 className="mt-9 text-6xl font-medium  whitespace-pre-line font-medium text-transparent tracking-tight
+          <h3 className="mt-9 text-6xl whitespace-pre-line font-medium text-transparent tracking-tight
         bg-clip-text bg-gradient-to-r from-blue to-darkgrey"
           >
             A search tool for spacex {`\n`}launches
           </h3>
           <Input
             launches={launches}
+            state={state}
             setData={setData}
             searchParams={searchParams}
             setSearchParams={setSearchParams}

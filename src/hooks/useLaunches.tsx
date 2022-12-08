@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GetLaunches } from '../queries/GetLaunches';
 import { FindLaunch } from "../queries/FindLaunch";
+import { QueryLaunches } from "../queries/QueryLaunches";
 
 const getLaunches = (state: {
   query: string; orbit: { value: string }; activePage: number;
@@ -20,6 +21,21 @@ const getLaunches = (state: {
   return { loading, error, data, count, offset, client };
 }
 
+const queryLaunches = (state: {
+  query: string; orbit: { value: string };
+  type: { value: string }; year: { value: string },
+}) => {
+
+  const { loading, error, data, client } = useQuery(QueryLaunches, {
+    variables: {
+      year: state.year.value, type: state.type.value,
+      orbit: state.orbit.value, name: state.query
+    },
+  });
+
+  return { loading, error, data, client };
+}
+
 const findLaunch = (id: string) => {
   const { loading, error, data } = useQuery(FindLaunch, {
     variables: { id },
@@ -28,4 +44,4 @@ const findLaunch = (id: string) => {
   return { loading, error, data };
 }
 
-export { getLaunches, findLaunch }
+export { getLaunches, queryLaunches, findLaunch }

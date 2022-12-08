@@ -12,7 +12,7 @@ interface TagProps {
 }
 
 interface QueryProps {
-  state?: any;
+  state: any;
   setData: (arg0: {
     payload: { value: string; label: string } | number | string; name: string;
   }) => void;

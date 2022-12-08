@@ -1,10 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { findLaunch } from '../hooks/useLaunches';
-import { Error, Cached, Block } from '@mui/icons-material';
-import { useState, useEffect, ReactElement, ReactFragment, ReactNode } from 'react';
+import { ReactElement, ReactFragment } from 'react';
 import {
-  Notes,
-  FactCheck,
   Assignment,
   Rocket,
   Language,
@@ -12,7 +9,9 @@ import {
   CalendarMonth,
   Public,
   TaskAlt,
-  Scale
+  Error,
+  Cached,
+  Block
 } from "@mui/icons-material";
 import { LaunchMap } from '../LaunchMap';
 
@@ -29,74 +28,13 @@ const Launch = () => {
 
   const launch = findLaunch(searchStringInArray() || location.state.id);
 
-  const data = launch?.data?.launch
-
-  const nationalitiesArray: any[] = [];
-  const [nationalities, setNationalities] = useState("");
-
-  const payloadsArray: any[] = [];
-  const [payloadSum, setPayloadSum] = useState(0);
-
-  const fetchPayloads = async () => {
-    await data.rocket.second_stage.payloads.map((data: { payload_mass_kg: string }) => {
-      payloadsArray.push(data.payload_mass_kg);
-    });
-  }
-
-  const calculatePayloadSum = async (sum: number) => {
-    return sum = await payloadsArray.reduce((partialSum, a) => partialSum + a, 0);
-  }
-
-  const setPayload = async () => {
-    const sum = 0;
-
-    await fetchPayloads();
-    await calculatePayloadSum(sum);
-    setTimeout(() => setPayloadSum(sum));
-  }
-
-  const fetchNationalities = async () => {
-    await data.rocket.second_stage.payloads.map((data: { nationality: string }) => {
-      // If nationalities array does not include the exact nationality
-      if (!nationalitiesArray.includes(data.nationality)) {
-        nationalitiesArray.push(data.nationality);
-      }
-    });
-  }
-
-  const concatNationalities = (concat: string) => {
-    concat = nationalitiesArray.join(' / ')
-    setNationalities(concat);
-  }
-
-  const setNationality = async () => {
-    const concat = "";
-
-    await fetchNationalities();
-    concatNationalities(concat);
-  }
-
-  useEffect(() => {
-    setPayload();
-    setNationality();
-  }, [payloadsArray]);
+  const data = launch?.data?.launch;
 
   const IconWrapper = (props: { children: string | ReactFragment | ReactElement }) => (
     <div className="flex flex-col items-center justify-center mt-auto w-full mt-28">
       {props.children}
     </div>
   );
-
-  const getRandomPicture = () => {
-    const pictures = data.links.flickr_images;
-    const picture = pictures[pictures.length * Math.random() | 0];
-
-    return (
-      <div className="w-80 h-80">
-        <img src={picture} alt="launch" className="w-full h-full rounded-sm" />
-      </div>
-    );
-  }
 
   switch (true) {
     case launch.loading:
@@ -120,38 +58,31 @@ const Launch = () => {
       );
     default:
       return (
-        <main className="mt-14 mb-8 grid grid-flow-row grid-cols-[6fr, 9fr] border-2 border-grey bg-grey rounded-sm p-14 gap-x-20 gap-y-6">
-          <div className="flex flex-col gap-4 w-[300px] row-start-1 row-end-3 grid-rows-3">
-            <div className="bg-lightgrey w-full h-fit p-4 rounded-sm text-3xl">
-              {data.mission_name}
-            </div>
-
-
-            {getRandomPicture()}
-            <div className="row-span-2">
-              <span title="Details">
-                <Notes />
-              </span>
-              {data.details ?? "No details"}
-            </div>
+        <section className="mt-16 mb-8 flex flex-col grid grid-cols-4 gap-4">
+          <div className="w-full h-fit p-4 text-4xl col-span-2">
+            {data.mission_name}
           </div>
-          <div className="flex flex-col gap-4 col-start-2 col-end-3 w-min">
+          <section className="grid grid-flow-row col-span-4 grid-cols-4 gap-4 rounded-sm">
+            <div className="col-span-3 grid grid-cols-3 grid-flow-row auto-rows-max gap-4">
+              {data.links.flickr_images[1] !== undefined ?
+                <div className="col-span-3 h-[312px]">
+                  <img src={data.links.flickr_images[1]} alt="launch" className="object-center w-full h-full object-cover rounded-sm" />
+                </div> : null}
+              <div className="pr-24 col-span-3 h-fit text-lg bg-grey rounded-sm p-4 py-6 leading-6">
+                {data.details ?? "No details"}
+              </div>
+            </div>
             <ItemList
               data={data}
-              nationalities={nationalities}
-              payloadSum={payloadSum}
             />
-          </div>
-        </main>
+          </section>
+        </section>
       )
   }
 }
 
-
-
-const ItemList = ({ data, nationalities, payloadSum }: any) => (
-  <>
-
+const ItemList = ({ data }: any) => (
+  <div className="flex flex-col gap-4 col-span-1 h-fit bg-grey rounded-sm p-4 py-6">
     <Item
       title="Rocket name"
       icon={<Assignment />}
@@ -165,7 +96,7 @@ const ItemList = ({ data, nationalities, payloadSum }: any) => (
     <Item
       title="Nationality"
       icon={<Language />}
-      data={nationalities}
+      data={data.rocket.second_stage.payloads[0].nationality}
     />
     <Item
       title="Launch site"
@@ -173,17 +104,11 @@ const ItemList = ({ data, nationalities, payloadSum }: any) => (
       data={data.launch_site.site_name}
     />
     <Item
-      title="Year"
+      title="Launch year"
       icon={<CalendarMonth />}
       data={data.launch_year}
     />
     <Item
-      title="Payload"
-      icon={<Scale />}
-      data={payloadSum === 0 ? "Unknown" : `${payloadSum} kg`}
-    />
-    <Item
-      className="capitalize"
       title="Orbit"
       icon={<Public />}
       data={
@@ -197,17 +122,16 @@ const ItemList = ({ data, nationalities, payloadSum }: any) => (
       icon={<TaskAlt />}
       data={data.launch_success === true ? "Success" : "Failure"}
     />
-  </>
-)
+  </div>
+);
 
-const Item = (props: { data: string; icon: ReactElement; title: string; className?: string }) => (
-  <div
-    className={`flex flex-row gap-4 items-center w-max ${props.className}`}
-    title={props.title}
-  >
-    {props.icon}
+const Item = (props: { data: string; icon: ReactElement; title: string; }) => (
+  <div className="flex flex-row gap-4 items-center w-max capitalize">
+    <div title={props.title}>
+      {props.icon}
+    </div>
     {props.data}
   </div>
-)
+);
 
 export { Launch }
