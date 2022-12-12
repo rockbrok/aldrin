@@ -19,11 +19,10 @@ const Launch = () => {
   const location = useLocation();
   const path = location.pathname.replace('/', '');
 
-  function searchStringInArray() {
+  const searchStringInArray = () => {
     for (let i = 0; i < LaunchMap.length; i++) {
       if (LaunchMap[i].name.match(path)) return String(LaunchMap[i].id);
     }
-    return "";
   }
 
   const launch = findLaunch(searchStringInArray() || location.state.id);
@@ -64,10 +63,9 @@ const Launch = () => {
           </div>
           <section className="grid grid-flow-row col-span-4 grid-cols-4 gap-4 rounded-sm">
             <div className="col-span-3 grid grid-cols-3 grid-flow-row auto-rows-max gap-4">
-              {data.links.flickr_images[1] !== undefined ?
-                <div className="col-span-3 h-[312px]">
-                  <img src={data.links.flickr_images[1]} alt="launch" className="object-center w-full h-full object-cover rounded-sm" />
-                </div> : null}
+              <Image
+                data={data}
+              />
               <div className="pr-24 col-span-3 h-fit text-lg bg-grey rounded-sm p-4 py-6 leading-6">
                 {data.details ?? "No details"}
               </div>
@@ -79,6 +77,19 @@ const Launch = () => {
         </section>
       )
   }
+}
+
+const Image = ({ data }: any) => {
+  if (data.links.flickr_images[1] !== undefined) return (
+    <div className="col-span-3 h-[312px]">
+      <img
+        src={data.links.flickr_images[1]}
+        alt="launch"
+        className="object-center w-full h-full object-cover rounded-sm"
+      />
+    </div>
+  )
+  else return null;
 }
 
 const ItemList = ({ data }: any) => (

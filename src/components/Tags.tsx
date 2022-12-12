@@ -11,7 +11,7 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
           h-9 w-fit
           bg-grey rounded-sm gap-4 pl-3"
           key={index}>
-          <span>{item.value}</span>
+          <span className="capitalize">{item.value}</span>
           <ClearButton
             icon="Cancel"
             setData={setData}

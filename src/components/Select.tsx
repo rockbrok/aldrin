@@ -51,8 +51,8 @@ const Select: FC<SelectProps & SearchProps> = ({ state, id, items, setData, help
 const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems, tagsList, id, searchParams, setSearchParams }) => {
 
   const spliceArray = () => {
-    tagsList.map((item: { state: string; }, index: number) => {
-      if (item.state == id) {
+    tagsList.map((item: { label: string; }, index: number) => {
+      if (item.label == id) {
         tagsList.splice(index, 1);
       }
     });
@@ -68,7 +68,7 @@ const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems
       name: "activePage",
     });
     spliceArray();
-    tagsList.push({ value: item.label, state: id });
+    tagsList.push({ value: item.label, label: id });
     searchParams.set(id, item.value);
     setSearchParams(searchParams);
   }
@@ -84,11 +84,11 @@ const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems
       {items.map((item: { label: string, value: string }, index: number) => (
         <div
           key={index}
-          onClick={item.value === state.value ? undefined : () => handleChange(item)}
+          onClick={item.value === state ? undefined : () => handleChange(item)}
           className={`relative select-none bg-grey
           border-b-[1px] border-grey rounded-sm 
           p-2 pl-9 cursor-pointer 
-          ${item.value == state.value ? "cursor-default" : "hover:bg-black hover:text-white"}`}
+          ${item.value == state ? "cursor-default" : "hover:bg-black hover:text-white"}`}
         >
           {item.label}
         </div>

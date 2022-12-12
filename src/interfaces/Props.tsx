@@ -1,11 +1,10 @@
 interface SearchProps {
   searchParams: any;
   setSearchParams: any;
-  page?: boolean;
 }
 
 interface TagProps {
-  tagsList: { value: string | number | null; state: string }[];
+  tagsList: { value: string | number | null; label: string }[];
   setData: (arg0: {
     payload: { value: string; label: string } | number; name: string;
   }) => void;
@@ -14,7 +13,7 @@ interface TagProps {
 interface QueryProps {
   state: any;
   setData: (arg0: {
-    payload: { value: string; label: string } | number | string; name: string;
+    payload: { value: string; label: string } | number | string | boolean; name: string;
   }) => void;
   launches: {
     loading: boolean,
@@ -29,7 +28,7 @@ interface SelectProps {
   id: string;
   helper?: string;
   showItems?: boolean;
-  tagsList: { value: string | number; state: string }[];
+  tagsList: { value: string | number | null; label: string }[];
   state: any;
   setData: (arg0: {
     payload: { value: string; label: string } | number | string; name: string;

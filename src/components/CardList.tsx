@@ -56,11 +56,10 @@ const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
     </div>
   );
 
-  function searchStringInArray(data: any) {
+  const searchStringInArray = (data: any) => {
     for (let i = 0; i < LaunchMap.length; i++) {
       if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
     }
-    return "";
   }
 
   switch (true) {
