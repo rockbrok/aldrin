@@ -11,7 +11,7 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
           h-9 w-fit
           bg-grey rounded-sm gap-4 pl-3"
           key={index}>
-          <span className={item.label === "orbit" ? "capitalize" : ""}>{item.value}</span>
+          <span className={item.label === "orbit" ? "capitalize" : ""}>{String(item.value).replaceAll('-', ' ')}</span>
           <ClearButton
             icon="Cancel"
             setData={setData}

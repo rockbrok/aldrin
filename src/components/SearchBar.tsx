@@ -131,11 +131,22 @@ const InputDropdown = ({ state, setDropdownIsOpen, dropdownIsOpen, query, launch
     }
   }
 
-  const boldMatchCharacters = ({ sentence, characters }: any) => {
-    // TO FIX:
-    // When final character of word is made bold, space after word is removed
-    const regEx = new RegExp(characters, 'gi');
-    return sentence.replace(regEx, '<strong>$&</strong>')
+  const boldMatchCharacters = ({ result, query }: any) => {
+    const textArray = result.split(RegExp(query, "ig"));
+    const match = result.match(RegExp(query, "ig"));
+
+    return (
+      <span>
+        {textArray.map((item: any, index: number) => (
+          <>
+            {item}
+            {index !== textArray.length - 1 && match && (
+              <b>{match[index]}</b>
+            )}
+          </>
+        ))}
+      </span>
+    );
   }
 
   const newArray: { name: string; id: string; }[] = [];
@@ -170,8 +181,9 @@ const InputDropdown = ({ state, setDropdownIsOpen, dropdownIsOpen, query, launch
             className="w-full h-min relative"
             key={index}
           >
-            <p className={`flex flex-row items-start font-normal ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} hover:bg-black hover:text-white rounded-sm`}>
-              {ReactHtmlParser(boldMatchCharacters({ sentence: data.name, characters: query }))}
+            <p className={`flex flex-row items-start font-normal ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} 
+              hover:bg-black hover:text-white rounded-sm`}>
+              {boldMatchCharacters({ result: data.name, query: query })}
             </p>
           </Link>
         )
