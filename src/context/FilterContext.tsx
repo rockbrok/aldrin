@@ -22,8 +22,6 @@ const FilterContextProvider = ({ children }: any) => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
 
-  console.log(params.get("orbit"));
-
   const initialState = {
     orbit: params.get("orbit") ?? "",
     year: params.get("year") ?? "",

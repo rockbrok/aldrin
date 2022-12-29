@@ -60,7 +60,7 @@ const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems
 
   const handleChange = (item: { value: string; label: string; }) => {
     setData({
-      payload: { value: item.value, label: item.label },
+      payload: item.value,
       name: label,
     });
     setData({
@@ -84,11 +84,11 @@ const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems
       {items.map((item: { label: string, value: string }, index: number) => (
         <div
           key={index}
-          onClick={item.value === state.value ? undefined : () => handleChange(item)}
+          onClick={item.value === state ? undefined : () => handleChange(item)}
           className={`relative select-none bg-grey
           border-b-[1px] border-grey rounded-sm 
           p-2 pl-9 cursor-pointer 
-          ${item.value == state.value ? "cursor-default" : "hover:bg-black hover:text-white"}`}
+          ${item.value == state ? "cursor-default" : "hover:bg-black hover:text-white"}`}
         >
           {item.label}
         </div>

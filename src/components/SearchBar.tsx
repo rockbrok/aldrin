@@ -5,7 +5,6 @@ import { LaunchMap } from '../LaunchMap';
 import { Link, useNavigate } from 'react-router-dom';
 import { queryLaunches } from '../hooks/useLaunches';
 import OutsideClickHandler from "react-outside-click-handler";
-import ReactHtmlParser from 'react-html-parser';
 // components
 import { ClearButton } from './ClearButton';
 
@@ -120,8 +119,6 @@ const ClearInputButton = ({ query, state, setData, setQuery, searchParams, setSe
     )
   } else return null
 }
-
-
 
 const InputDropdown = ({ state, setDropdownIsOpen, dropdownIsOpen, query, launches }: any) => {
 

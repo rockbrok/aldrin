@@ -4,16 +4,12 @@ import { FindLaunch } from "../queries/FindLaunch";
 import { QueryLaunches } from "../queries/QueryLaunches";
 
 const getLaunches = (state: {
-  query: string; orbit: { value: string }; activePage: number;
-  type: { value: string }; year: { value: string }, placeholderCardCount: number
+  query: string; orbit: string; activePage: number; type: string; year: string, placeholderCardCount: number
 }) => {
   const offset = (state.activePage - 1) * state.placeholderCardCount;
 
   const { loading, error, data } = useQuery(GetLaunches, {
-    variables: {
-      offset, year: state.year.value, type: state.type.value,
-      orbit: state.orbit.value, name: state.query
-    },
+    variables: { offset, year: state.year, type: state.type, orbit: state.orbit, name: state.query }
   });
 
   const count: number = Math.ceil(data?.launchesPastResult?.result?.totalCount / state.placeholderCardCount);
@@ -30,7 +26,6 @@ const findLaunch = (id: string) => {
   const { loading, error, data } = useQuery(FindLaunch, {
     variables: { id },
   });
-
   return { loading, error, data };
 }
 
