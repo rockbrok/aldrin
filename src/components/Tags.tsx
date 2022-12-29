@@ -6,7 +6,7 @@ import { ClearButton } from './ClearButton';
 const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, setSearchParams }) => (
   <div className="grid col-span-3">
     <div className="flex flex-row gap-4">
-      {tagsList.map((item: any, index: number) => (
+      {tagsList.map((item: { value: string | number | null, label: string }, index: number) => (
         <div className="flex flex-row items-center 
           h-9 w-fit
           bg-grey rounded-sm gap-4 pl-3"

@@ -20,12 +20,13 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
     input?.focus();
   }
 
-  const handleClick = (query: string) => {
+  const handleClick = (query: string, e: any) => {
     // const REGEX = /^[a-zA-Z0-9]+$/;
     setData({
       payload: query,
       name: "query",
     })
+    e.preventDefault();
     searchParams.set("q", query);
     setSearchParams(searchParams);
   }
@@ -44,8 +45,8 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
         >
           <form
             onSubmit={(e) => {
-              e.preventDefault();
-              handleClick(query);
+              handleClick(query, e);
+              setDropdownIsOpen(false);
             }}
             className={`flex flex-row items-center 
               ${state.isIDRoute ? 'h-[36px]' : 'h-[46px]'} 
@@ -66,7 +67,6 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
             <div className="!w-fit relative h-full">
               <ClearInputButton
                 query={query}
-                state={state}
                 setQuery={setQuery}
                 setData={setData}
                 searchParams={searchParams}
@@ -75,7 +75,6 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
               <SubmitButton
                 setDropdownIsOpen={setDropdownIsOpen}
                 handleClick={handleClick}
-                state={state}
                 query={query}
                 navigate={navigate}
               />
@@ -94,7 +93,7 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
   );
 }
 
-const ClearInputButton = ({ query, state, setData, setQuery, searchParams, setSearchParams }: any) => {
+const ClearInputButton = ({ query, setData, setQuery, searchParams, setSearchParams }: any) => {
   if (query.length !== 0) {
     return (
       <div className="flex flex-row h-full mr-12 items-center">
