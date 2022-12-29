@@ -1,55 +1,35 @@
 import { FC, useEffect, useState } from 'react';
 import { QueryProps, SearchProps } from '../interfaces/Props';
-import { useLocation } from 'react-router-dom';
 // Components
 import { Select } from './Select';
 import { Tags } from './Tags';
 
 const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const year = params.get("year");
-  const orbit = params.get("orbit");
-  const type = params.get("type");
-  const query = params.get("q");
 
   interface StateProperties {
-    value: string;
-    state: string;
+    value: string | null | number;
+    label: string;
   }
 
-  const [tagsList, setTagsList] = useState<StateProperties[]>([]);
+  const [tagsList] = useState<StateProperties[]>([]);
 
+  const removeKebab = (str: string) => String(str).replaceAll('-', ' ');
+
+  const tagSwitch = (props: { obj: any; label: string; }) => {
+    switch (true) {
+      case (props.obj === ""):
+      case (props.label in tagsList):
+        return null;
+      default:
+        tagsList.push({ value: props.obj, label: props.label })
+    }
+  }
 
   useEffect(() => {
-
-    const func = () => {
-      if (year !== null) {
-        if ("year" in tagsList) {
-          return;
-        } else {
-          tagsList.push({ value: year, state: "year" })
-          console.log(year);
-        }
-      }
-
-      if (type !== null) {
-        tagsList.push({ value: type, state: "type" })
-      }
-      if (orbit !== null) {
-        tagsList.push({ value: orbit, state: "orbit" })
-      }
-    }
-    func();
+    tagSwitch({ obj: state.year, label: "year" });
+    tagSwitch({ obj: state.type, label: "type" });
+    tagSwitch({ obj: removeKebab(state.orbit), label: "orbit" });
   }, []);
-
-  //   case type !== null:
-  //     return tagsList.push({ value: type, state: "type" });
-  //     case orbit !== null:
-  //       return tagsList.push({ value: orbit, state: "orbit" });
-  //   default:
-  //     return;
-  // }
 
   const createYearsList = (years: { label: number; value: string; }[]) => {
     for (let i = 2006; i <= 2010; i++) {
@@ -97,7 +77,7 @@ const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, se
         <Select
           items={getYearsList()}
           tagsList={tagsList}
-          id="year"
+          label="year"
           helper="Year"
           setData={setData}
           state={state.year}
@@ -107,7 +87,7 @@ const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, se
         <Select
           items={typesList}
           tagsList={tagsList}
-          id="type"
+          label="type"
           helper="Rocket type"
           setData={setData}
           state={state.type}
@@ -117,7 +97,7 @@ const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, se
         <Select
           items={orbitsList}
           tagsList={tagsList}
-          id="orbit"
+          label="orbit"
           helper="Orbit"
           setData={setData}
           state={state.orbit}

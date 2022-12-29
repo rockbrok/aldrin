@@ -5,35 +5,25 @@ import { QueryLaunches } from "../queries/QueryLaunches";
 
 const getLaunches = (state: {
   query: string; orbit: { value: string }; activePage: number;
-  type: { value: string }; year: { value: string },
+  type: { value: string }; year: { value: string }, placeholderCardCount: number
 }) => {
-  const offset = (state.activePage - 1) * 12;
+  const offset = (state.activePage - 1) * state.placeholderCardCount;
 
-  const { loading, error, data, client } = useQuery(GetLaunches, {
+  const { loading, error, data } = useQuery(GetLaunches, {
     variables: {
       offset, year: state.year.value, type: state.type.value,
       orbit: state.orbit.value, name: state.query
     },
   });
 
-  const count: number = Math.ceil(data?.launchesPastResult?.result?.totalCount / 12);
+  const count: number = Math.ceil(data?.launchesPastResult?.result?.totalCount / state.placeholderCardCount);
 
-  return { loading, error, data, count, offset, client };
+  return { loading, error, data, count, offset };
 }
 
-const queryLaunches = (state: {
-  query: string; orbit: { value: string };
-  type: { value: string }; year: { value: string },
-}) => {
-
-  const { loading, error, data, client } = useQuery(QueryLaunches, {
-    variables: {
-      year: state.year.value, type: state.type.value,
-      orbit: state.orbit.value, name: state.query
-    },
-  });
-
-  return { loading, error, data, client };
+const queryLaunches = () => {
+  const { loading, error, data } = useQuery(QueryLaunches);
+  return { loading, error, data };
 }
 
 const findLaunch = (id: string) => {

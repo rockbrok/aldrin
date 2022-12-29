@@ -1,48 +1,42 @@
 import { createContext, useReducer } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const FilterContext = createContext(null as any);
-
-const initialState = {
-  orbit: {
-    value: "",
-    label: "All",
-  },
-  year: {
-    value: "",
-    label: "All",
-  },
-  type: {
-    value: "",
-    label: "All",
-  },
-  query: "",
-  limit: "",
-  // id: "",
-  placeholderCardCount: 12,
-  activePage: 1,
-};
 
 const ACTIONS = {
   SET: "set",
 };
 
-const reducer = (state: any, action: { type: string, name: string, payload: object | string | number }) => {
+const reducer = (state: any, action: { type: string, name: string, payload: object | string | number | boolean }) => {
   switch (action.type) {
     case ACTIONS.SET:
       return {
         ...state,
         [action.name]: action.payload
       };
-    default:
-      return initialState;
   }
 }
 
-const FilterContextProvider = ({ children, stateVar }: any) => {
-  const [state, dispatch] = useReducer(reducer, stateVar);
+const FilterContextProvider = ({ children }: any) => {
 
-  const setData = (props: { payload: object | string | number; name: string; }) => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  console.log(params.get("orbit"));
+
+  const initialState = {
+    orbit: params.get("orbit") ?? "",
+    year: params.get("year") ?? "",
+    type: params.get("type") ?? "",
+    query: params.get("q") ?? "",
+    isIDRoute: false,
+    placeholderCardCount: 12,
+    activePage: 1,
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const setData = (props: { payload: object | string | number | boolean; name: string; }) => {
     dispatch({
       type: ACTIONS.SET,
       payload: props.payload,
@@ -57,41 +51,4 @@ const FilterContextProvider = ({ children, stateVar }: any) => {
   );
 }
 
-const Context = ({ children }: any) => {
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const year = params.get("year");
-  const orbit = params.get("orbit");
-  const type = params.get("type");
-  const query = params.get("q");
-
-  const initialState = {
-    orbit: {
-      value: orbit || "",
-      label: "All",
-    },
-    year: {
-      value: year || "",
-      label: "All",
-    },
-    type: {
-      value: type || "",
-      label: "All",
-    },
-    query: query || "",
-    limit: "",
-    placeholderCardCount: 12,
-    activePage: 1,
-  };
-
-  return (
-    <FilterContextProvider stateVar={initialState}>
-      {/* <Outlet /> */}
-      {children}
-    </FilterContextProvider>
-  );
-};
-
-export default Context;
-
-export { FilterContext }
+export { FilterContext, FilterContextProvider }

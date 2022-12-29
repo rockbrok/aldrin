@@ -11,15 +11,15 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
           h-9 w-fit
           bg-grey rounded-sm gap-4 pl-3"
           key={index}>
-          <span>{item.value}</span>
+          <span className={item.label === "orbit" ? "capitalize" : ""}>{item.value}</span>
           <ClearButton
             icon="Cancel"
             setData={setData}
-            payload={{ value: "", label: "All" }}
-            name={item.state}
+            payload=""
+            name={item.label}
             func={() => {
               tagsList.splice(index, 1);
-              searchParams.delete(item.state);
+              searchParams.delete(item.label);
               setSearchParams(searchParams);
             }}
           />

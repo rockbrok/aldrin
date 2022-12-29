@@ -9,10 +9,11 @@ import ReactHtmlParser from 'react-html-parser';
 // components
 import { ClearButton } from './ClearButton';
 
-const Input: FC<QueryProps & SearchProps> = ({ page, state, setData, searchParams, setSearchParams }) => {
-  const [query, setQuery] = useState<string>("");
+const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
+
+  const [query, setQuery] = useState<string>(state.query ?? "");
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
-  const launches = queryLaunches(state);
+  const launches = queryLaunches();
   const navigate = useNavigate();
 
   const inputFocus = () => {
@@ -26,14 +27,14 @@ const Input: FC<QueryProps & SearchProps> = ({ page, state, setData, searchParam
       payload: query,
       name: "query",
     })
-    searchParams.set("query", query);
+    searchParams.set("q", query);
     setSearchParams(searchParams);
   }
 
   return (
-    <section className={page ? "flex w-full" : "grid grid-cols-4 grid-rows-1 gap-4 mt-10"}>
+    <section className={state.isIDRoute ? "col-start-3 col-span-2" : "col-span-4 grid grid-cols-4 grid-rows-1 gap-4 mt-10"}>
       <div
-        className={`relative ${page ? 'w-full' : 'col-span-3'} flex flex-row`}
+        className={`relative ${state.isIDRoute ? 'w-full' : 'col-span-3'} flex flex-row`}
         id="searchContainer"
         onClick={inputFocus}
       >
@@ -45,17 +46,17 @@ const Input: FC<QueryProps & SearchProps> = ({ page, state, setData, searchParam
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleClick(query)
+              handleClick(query);
             }}
             className={`flex flex-row items-center 
-              ${page ? 'h-[36px]' : 'h-[46px]'} 
+              ${state.isIDRoute ? 'h-[36px]' : 'h-[46px]'} 
               !w-full bg-grey rounded-sm py-1 cursor-default`}
           >
             <input
               type="text"
               role="search"
               spellCheck="false"
-              className={`relative placeholder:text-black !w-full bg-transparent font-normal rounded-sm ${page ? 'my-1.5 mx-3' : 'm-3'} focus:outline-none cursor-text select-none`}
+              className={`relative placeholder:text-black !w-full bg-transparent font-normal rounded-sm ${state.isIDRoute ? 'my-1.5 mx-3' : 'm-3'} focus:outline-none cursor-text select-none`}
               value={query}
               onFocus={() => setDropdownIsOpen(true)}
               onChange={(e) => {
@@ -66,14 +67,16 @@ const Input: FC<QueryProps & SearchProps> = ({ page, state, setData, searchParam
             <div className="!w-fit relative h-full">
               <ClearInputButton
                 query={query}
+                state={state}
                 setQuery={setQuery}
                 setData={setData}
                 searchParams={searchParams}
                 setSearchParams={setSearchParams}
               />
-              <SearchButton
+              <SubmitButton
                 setDropdownIsOpen={setDropdownIsOpen}
                 handleClick={handleClick}
+                state={state}
                 query={query}
                 navigate={navigate}
               />
@@ -81,7 +84,7 @@ const Input: FC<QueryProps & SearchProps> = ({ page, state, setData, searchParam
           </form>
           <InputDropdown
             launches={launches}
-            page={page}
+            state={state}
             query={query}
             dropdownIsOpen={dropdownIsOpen}
             setDropdownIsOpen={setDropdownIsOpen}
@@ -92,7 +95,7 @@ const Input: FC<QueryProps & SearchProps> = ({ page, state, setData, searchParam
   );
 }
 
-const ClearInputButton = ({ query, setData, setQuery, searchParams, setSearchParams }: any) => {
+const ClearInputButton = ({ query, state, setData, setQuery, searchParams, setSearchParams }: any) => {
   if (query.length !== 0) {
     return (
       <div className="flex flex-row h-full mr-12 items-center">
@@ -104,7 +107,11 @@ const ClearInputButton = ({ query, setData, setQuery, searchParams, setSearchPar
           name="query"
           func={() => {
             setQuery("");
-            searchParams.delete("query");
+            setData({
+              payload: "",
+              name: "query",
+            })
+            searchParams.delete("q");
             setSearchParams(searchParams);
           }}
         />
@@ -114,24 +121,19 @@ const ClearInputButton = ({ query, setData, setQuery, searchParams, setSearchPar
   } else return null
 }
 
-interface DropdownProps {
-  query: string;
-  launches: any;
-  dropdownIsOpen: boolean;
-  setDropdownIsOpen: any;
-  page?: boolean;
-}
 
-const InputDropdown: FC<DropdownProps> = ({ page, setDropdownIsOpen, dropdownIsOpen, query, launches }) => {
 
-  function searchStringInArray(data: any) {
+const InputDropdown = ({ state, setDropdownIsOpen, dropdownIsOpen, query, launches }: any) => {
+
+  const searchIDInArray = (data: any) => {
     for (let i = 0; i < LaunchMap.length; i++) {
       if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
     }
-    return "";
   }
 
   const boldMatchCharacters = ({ sentence, characters }: any) => {
+    // TO FIX:
+    // When final character of word is made bold, space after word is removed
     const regEx = new RegExp(characters, 'gi');
     return sentence.replace(regEx, '<strong>$&</strong>')
   }
@@ -139,7 +141,7 @@ const InputDropdown: FC<DropdownProps> = ({ page, setDropdownIsOpen, dropdownIsO
   const newArray: { name: string; id: string; }[] = [];
 
   const pushItems = () => {
-    launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }, index: number) => {
+    launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }) => {
       if (data.mission_name.toLowerCase().includes(query.toLowerCase())) {
         newArray.push({ name: data.mission_name, id: data.id });
       }
@@ -158,18 +160,17 @@ const InputDropdown: FC<DropdownProps> = ({ page, setDropdownIsOpen, dropdownIsO
   }
 
   return (
-    <div className={`bg-grey w-full h-fit absolute left-0 ${page ? 'top-[35px]' : 'top-[45px]'} z-10 border-2 border-b-[1px] border-grey`}>
+    <div className={`bg-grey w-full h-fit absolute left-0 ${state.isIDRoute ? 'top-[35px]' : 'top-[45px]'} z-10 border-2 border-b-[1px] border-grey`}>
       {newArray.slice(0, 6).map((data: { name: string; id: string }, index: number) => {
-        console.log('data: ', data);
         return (
           <Link
-            to={`/${searchStringInArray(data)}`}
+            to={`/${searchIDInArray(data)}`}
             onClickCapture={() => setDropdownIsOpen(false)}
             state={{ id: data.id }}
             className="w-full h-min relative"
             key={index}
           >
-            <p className={`flex flex-row items-start font-normal ${page ? 'py-1.5 px-3' : 'p-3'} hover:bg-black hover:text-white rounded-sm`}>
+            <p className={`flex flex-row items-start font-normal ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} hover:bg-black hover:text-white rounded-sm`}>
               {ReactHtmlParser(boldMatchCharacters({ sentence: data.name, characters: query }))}
             </p>
           </Link>
@@ -180,7 +181,7 @@ const InputDropdown: FC<DropdownProps> = ({ page, setDropdownIsOpen, dropdownIsO
   );
 }
 
-const SearchButton = ({ setDropdownIsOpen, handleClick, query, navigate }: any) => (
+const SubmitButton = ({ setDropdownIsOpen, handleClick, query, navigate }: any) => (
   <button
     className="absolute right-0 top-0 h-full w-12 items-center justify-center m-0"
     title="Search"
@@ -197,4 +198,4 @@ const SearchButton = ({ setDropdownIsOpen, handleClick, query, navigate }: any) 
   </button>
 );
 
-export { Input }
+export { SearchBar }

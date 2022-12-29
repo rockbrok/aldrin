@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { QueryProps } from "../interfaces/Props";
-import { GetLaunches } from '../queries/GetLaunches';
 
 const Pagination: FC<QueryProps> = ({ state, launches, setData }) => {
   if (launches.count > 1) return (
@@ -9,7 +8,6 @@ const Pagination: FC<QueryProps> = ({ state, launches, setData }) => {
         <Item
           key={index + 1}
           i={index + 1}
-          // client={launches.client}
           setData={setData}
           activePage={state.activePage}
         />)}
@@ -18,7 +16,7 @@ const Pagination: FC<QueryProps> = ({ state, launches, setData }) => {
   return <></>;
 };
 
-const Item = ({ i, setData, activePage, client }: any) => (
+const Item = ({ i, setData, activePage }: any) => (
   <div
     key={i}
     className={`flex flex-row items-center justify-center 
@@ -26,13 +24,6 @@ const Item = ({ i, setData, activePage, client }: any) => (
       cursor-pointer w-8 h-8 rounded-full 
       ${activePage === i ? "bg-black text-white" : "hover:bg-grey"}
     `}
-    // Prefetching not working ??
-    // onMouseOver={() =>
-    //   client.query({
-    //     query: GetLaunches,
-    //     variables: { offset: i * 12 }
-    //   })
-    // }
     onClick={() =>
       setData({
         payload: i,
