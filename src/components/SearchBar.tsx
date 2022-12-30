@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, KeyboardEventHandler, useCallback } from 'react';
 import { QueryProps, SearchProps } from '../interfaces/Props';
 import { Search } from "@mui/icons-material";
 import { LaunchMap } from '../LaunchMap';
@@ -20,6 +20,11 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
     input?.focus();
   }
 
+  const inputBlur = () => {
+    const input = document.getElementById('searchContainer')
+    input?.blur();
+  }
+
   const handleClick = (query: string, e: any) => {
     // const REGEX = /^[a-zA-Z0-9]+$/;
     setData({
@@ -31,8 +36,77 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
     setSearchParams(searchParams);
   }
 
+  const newArray: { name: string; id: string; }[] = [];
+
+  const results = () => {
+    switch (true) {
+      case launches.loading:
+      case Boolean(launches.error):
+      case launches.data.launchesPastResult.result.totalCount === 0:
+      case dropdownIsOpen === false:
+      case query.length === 0:
+        return;
+      default:
+        {
+          launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }) => {
+            if (data.mission_name.toLowerCase().includes(query.toLowerCase())) {
+              newArray.push({ name: data.mission_name, id: data.id });
+            }
+          })
+          const sliceResults = newArray.slice(0, 6);
+          return sliceResults;
+        }
+    }
+  }
+
+  const resultLength = () => {
+    return newArray.slice(0, 6).length;
+  }
+
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+
+  const handleMouseEnter = (index: number) => {
+    setFocusedIndex(index);
+    console.log(index);
+  };
+
+  const resetSearchComplete = useCallback(() => {
+    setFocusedIndex(-1);
+  }, []);
+
+  const handleKeyDown: KeyboardEventHandler<HTMLFormElement> = (e) => {
+    const { key } = e;
+    let nextIndexCount = 0;
+
+    // move down
+    if (e.key === "ArrowDown") {
+      nextIndexCount = (focusedIndex + 1) % resultLength();
+    }
+
+    // move up
+    if (key === "ArrowUp") {
+      nextIndexCount = (focusedIndex + resultLength() - 1) % resultLength();
+    }
+
+    // hide search results
+    if (key === "Escape") {
+      setDropdownIsOpen(false);
+      inputBlur;
+    }
+
+    // // select the current item
+    // if (key === "Enter") {
+    //   e.preventDefault();
+    //   handleSelection(focusedIndex);
+    // }
+
+    setFocusedIndex(nextIndexCount);
+  };
+
   return (
-    <section className={state.isIDRoute ? "col-start-3 col-span-2" : "col-span-4 grid grid-cols-4 grid-rows-1 gap-4 mt-10"}>
+    <section className={state.isIDRoute ? "col-start-3 col-span-2" :
+      "col-span-4 grid grid-cols-4 grid-rows-1 gap-4 mt-10"}
+    >
       <div
         className={`relative ${state.isIDRoute ? 'w-full' : 'col-span-3'} flex flex-row`}
         id="searchContainer"
@@ -48,6 +122,9 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
               handleClick(query, e);
               setDropdownIsOpen(false);
             }}
+            tabIndex={1}
+            onKeyDown={handleKeyDown}
+            onBlur={resetSearchComplete}
             className={`flex flex-row items-center 
               ${state.isIDRoute ? 'h-[36px]' : 'h-[46px]'} 
               !w-full bg-grey rounded-sm py-1 cursor-default`}
@@ -56,7 +133,8 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
               type="text"
               role="search"
               spellCheck="false"
-              className={`relative placeholder:text-black !w-full bg-transparent font-normal rounded-sm ${state.isIDRoute ? 'my-1.5 mx-3' : 'm-3'} focus:outline-none cursor-text select-none`}
+              className={`relative placeholder:text-black !w-full bg-transparent font-normal rounded-sm 
+                ${state.isIDRoute ? 'my-1.5 mx-3' : 'm-3'} focus:outline-none cursor-text select-none`}
               value={query}
               onFocus={() => setDropdownIsOpen(true)}
               onChange={(e) => {
@@ -80,13 +158,19 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
               />
             </div>
           </form>
-          <InputDropdown
-            launches={launches}
-            state={state}
-            query={query}
-            dropdownIsOpen={dropdownIsOpen}
-            setDropdownIsOpen={setDropdownIsOpen}
-          />
+          {results() !== undefined ?
+            <InputDropdown
+              launches={launches}
+              focusedIndex={focusedIndex}
+              setFocusedIndex={setFocusedIndex}
+              handleMouseEnter={handleMouseEnter}
+              results={results}
+              state={state}
+              query={query}
+              dropdownIsOpen={dropdownIsOpen}
+              setDropdownIsOpen={setDropdownIsOpen}
+            />
+            : null}
         </OutsideClickHandler>
       </div>
     </section>
@@ -119,7 +203,7 @@ const ClearInputButton = ({ query, setData, setQuery, searchParams, setSearchPar
   } else return null
 }
 
-const InputDropdown = ({ state, setDropdownIsOpen, dropdownIsOpen, query, launches }: any) => {
+const InputDropdown = ({ state, setDropdownIsOpen, query, focusedIndex, results }: any) => {
 
   const searchIDInArray = (data: any) => {
     for (let i = 0; i < LaunchMap.length; i++) {
@@ -145,30 +229,12 @@ const InputDropdown = ({ state, setDropdownIsOpen, dropdownIsOpen, query, launch
     );
   }
 
-  const newArray: { name: string; id: string; }[] = [];
-
-  const pushItems = () => {
-    launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }) => {
-      if (data.mission_name.toLowerCase().includes(query.toLowerCase())) {
-        newArray.push({ name: data.mission_name, id: data.id });
-      }
-    })
-  }
-
-  switch (true) {
-    case launches.loading:
-    case launches.error:
-    case launches.data.launchesPastResult.result.totalCount === 0:
-    case dropdownIsOpen === false:
-    case query.length === 0:
-      return null;
-    default:
-      pushItems();
-  }
-
   return (
-    <div className={`bg-grey w-full h-fit absolute left-0 ${state.isIDRoute ? 'top-[35px]' : 'top-[45px]'} z-10 border-2 border-b-[1px] border-grey`}>
-      {newArray.slice(0, 6).map((data: { name: string; id: string }, index: number) => {
+    <div
+      className={`bg-grey w-full h-fit absolute left-0 
+        ${state.isIDRoute ? 'top-[35px]' : 'top-[45px]'} z-10 border-2 border-b-[1px] border-grey`}
+    >
+      {results().map((data: { name: string; id: string }, index: number) => {
         return (
           <Link
             to={`/${searchIDInArray(data)}`}
@@ -176,9 +242,12 @@ const InputDropdown = ({ state, setDropdownIsOpen, dropdownIsOpen, query, launch
             state={{ id: data.id }}
             className="w-full h-min relative"
             key={index}
+          // onMouseEnter={handleMouseEnter(index)}
           >
             <p className={`flex flex-row items-start font-normal ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} 
-              hover:bg-black hover:text-white rounded-sm`}>
+              hover:bg-black hover:text-white rounded-sm`}
+              style={index === focusedIndex ? { backgroundColor: "#000", color: "#fff" } : {}}
+            >
               {boldMatchCharacters({ result: data.name, query: query })}
             </p>
           </Link>
