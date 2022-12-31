@@ -1,4 +1,4 @@
-import { FC, useState, KeyboardEventHandler, useCallback } from 'react';
+import { FC, useState, KeyboardEventHandler, useCallback, useEffect } from 'react';
 import { QueryProps, SearchProps } from '../interfaces/Props';
 import { Search } from "@mui/icons-material";
 import { LaunchMap } from '../LaunchMap';
@@ -11,7 +11,7 @@ import { ClearButton } from './ClearButton';
 const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
 
   const [query, setQuery] = useState<string>(state.query ?? "");
-  const [query2, setQuery2] = useState<string>(query);
+  const [query2, setQuery2] = useState<string>("");
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const launches = queryLaunches();
   const navigate = useNavigate();
@@ -69,19 +69,38 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
     setFocusedIndex(-1);
   }, []);
 
+  useEffect(() => {
+    if (focusedIndex === 6) {
+      setQuery2(query)
+    }
+  });
+
+
   const handleKeyDown: KeyboardEventHandler<HTMLFormElement> = (e) => {
     const { key } = e;
-    let nextIndexCount = 0;
+    let nextIndexCount = -1;
+
+    const length = results().length + 1;
+    const data = results()[focusedIndex];
+
+    const condition = () => {
+      if (nextIndexCount > -1 && nextIndexCount < 6) {
+        e.preventDefault();
+        const data = results()[nextIndexCount];
+        setQuery2(data.name);
+      }
+    }
 
     // Move down
     if (e.key === "ArrowDown") {
-      nextIndexCount = (focusedIndex + 1) % results().length;
+      nextIndexCount = (focusedIndex + 1) % length;
+      condition();
     }
 
     // Move up
     if (key === "ArrowUp") {
-      nextIndexCount = (focusedIndex + results().length - 1) % results().length;
-      e.preventDefault();
+      nextIndexCount = (focusedIndex + length - 1) % length;
+      condition();
     }
 
     // Hide search results
@@ -98,11 +117,7 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
           if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
         }
       }
-      const data = results()[focusedIndex];
-
       navigate(`/${searchIDInArray(data)}`)
-
-
     }
 
     setFocusedIndex(nextIndexCount);
@@ -166,16 +181,13 @@ const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams,
             </div>
           </form>
           <InputDropdown
-            launches={launches}
             focusedIndex={focusedIndex}
             navigate={navigate}
             setFocusedIndex={setFocusedIndex}
-            setQuery={setQuery}
             results={results}
             state={state}
             query={query}
             setQuery2={setQuery2}
-            dropdownIsOpen={dropdownIsOpen}
             setDropdownIsOpen={setDropdownIsOpen}
           />
         </OutsideClickHandler>
@@ -211,7 +223,7 @@ const ClearInputButton = ({ query, setData, setQuery, setQuery2, searchParams, s
   } else return null
 }
 
-const InputDropdown = ({ state, setDropdownIsOpen, query, setQuery, setQuery2, focusedIndex, results, setFocusedIndex, navigate }: any) => {
+const InputDropdown = ({ state, setDropdownIsOpen, query, setQuery2, focusedIndex, results, setFocusedIndex, navigate }: any) => {
 
   const searchIDInArray = (data: any) => {
     for (let i = 0; i < LaunchMap.length; i++) {
@@ -243,9 +255,6 @@ const InputDropdown = ({ state, setDropdownIsOpen, query, setQuery, setQuery2, f
         ${state.isIDRoute ? 'top-[35px]' : 'top-[45px]'} z-10 border-2 border-b-[1px] border-grey`}
     >
       {results().map((data: { name: string; id: string }, index: number) => {
-        if (index === focusedIndex) {
-          setQuery2(data.name);
-        }
         return (
           <Link
             to={`/${searchIDInArray(data)}`}
