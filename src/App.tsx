@@ -37,14 +37,19 @@ const Root = () => {
   return (
     <>
       <Header
-        launches={launches}
         state={state}
         setData={setData}
         searchParams={searchParams}
         setSearchParams={setSearchParams}
       />
       <main className="my-4 w-[900px]">
-        <Outlet context={[launches, state, setData, searchParams, setSearchParams]} />
+        <Outlet context={[
+          launches,
+          state,
+          setData,
+          searchParams,
+          setSearchParams
+        ]} />
       </main>
     </>
   )

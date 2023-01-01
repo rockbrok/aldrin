@@ -1,7 +1,11 @@
 interface SearchProps {
+  state?: any;
+  setData: (arg0: {
+    payload: { value: string; label: string } | number | string | boolean; name: string;
+  }) => void;
   searchParams: any;
   setSearchParams: any;
-  page?: boolean;
+  // page?: boolean;
 }
 
 interface TagProps {

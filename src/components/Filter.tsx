@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { QueryProps, SearchProps } from '../interfaces/Props';
+import { SearchProps } from '../interfaces/Props';
 // Components
 import { Select } from './Select';
 import { Tags } from './Tags';
 
-const Filter: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
+const Filter: FC<SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
 
   interface StateProperties {
     value: string | null | number;

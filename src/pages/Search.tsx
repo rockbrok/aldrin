@@ -12,7 +12,6 @@ const Search = () => {
       <Filter
         state={state}
         setData={setData}
-        launches={launches}
         searchParams={searchParams}
         setSearchParams={setSearchParams}
       />
@@ -21,11 +20,13 @@ const Search = () => {
         setData={setData}
         launches={launches}
       />
-      <Pagination
-        state={state}
-        setData={setData}
-        launches={launches}
-      />
+      {launches.count > 0 ?
+        <Pagination
+          state={state}
+          setData={setData}
+          launches={launches}
+        />
+        : null}
     </>
   );
 };

@@ -8,7 +8,7 @@ import OutsideClickHandler from "react-outside-click-handler";
 // components
 import { ClearButton } from './ClearButton';
 
-const SearchBar: FC<QueryProps & SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
+const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
 
   const [query, setQuery] = useState<string>(state.query ?? "");
   const [query2, setQuery2] = useState<string>("");

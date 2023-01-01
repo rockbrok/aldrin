@@ -8,10 +8,14 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
     <div className="flex flex-row gap-4">
       {tagsList.map((item: { value: string | number | null, label: string }, index: number) => (
         <div className="flex flex-row items-center 
-          h-9 w-fit
+          h-9 w-fit cursor-default
           bg-grey rounded-sm gap-4 pl-3"
           key={index}>
-          <span className={item.label === "orbit" ? "capitalize" : ""}>{String(item.value).replaceAll('-', ' ')}</span>
+          <span
+            className={item.label === "orbit" ? "capitalize" : ""}
+          >
+            {String(item.value).replaceAll('-', ' ')}
+          </span>
           <ClearButton
             icon="Cancel"
             setData={setData}

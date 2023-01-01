@@ -1,10 +1,10 @@
 import { Link, matchRoutes, useLocation } from "react-router-dom";
 import { FC, useEffect } from 'react';
-import { QueryProps, SearchProps } from '../interfaces/Props';
+import { SearchProps } from '../interfaces/Props';
 // Components
 import { SearchBar } from './SearchBar';
 
-const Header: FC<QueryProps & SearchProps> = ({ launches, state, setData, searchParams, setSearchParams }) => {
+const Header: FC<SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
   const location = useLocation();
   const routes = [{ path: "/search/:id" }]
   const route = matchRoutes(routes, location);
@@ -37,13 +37,12 @@ const Header: FC<QueryProps & SearchProps> = ({ launches, state, setData, search
             </h1>
           </Link>
           <span className="text-darkgrey text-[10px] ml-1 flex self-end tracking-wide mb-1">
-            v1.2.6
+            v1.6.2
           </span>
         </div>
         {state.isIDRoute ?
           <SearchBar
             state={state}
-            launches={launches}
             setData={setData}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
@@ -51,7 +50,6 @@ const Header: FC<QueryProps & SearchProps> = ({ launches, state, setData, search
           <Container>
             <Title />
             <SearchBar
-              launches={launches}
               state={state}
               setData={setData}
               searchParams={searchParams}
@@ -64,9 +62,9 @@ const Header: FC<QueryProps & SearchProps> = ({ launches, state, setData, search
   );
 }
 
-const Container = (props: { children: any }) => (
+const Container = ({ children }: any) => (
   <div className="grid grid-cols-4 grid-flow-row auto-rows-max gap-4 col-span-4 font-medium">
-    {props.children}
+    {children}
   </div>
 )
 
