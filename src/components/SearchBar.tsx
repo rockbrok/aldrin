@@ -262,7 +262,7 @@ const InputDropdown = ({ state, setDropdownIsOpen, query, setQuery2, focusedInde
             state={{ id: data.id }}
             className="w-full h-min relative"
             key={index}
-            onMouseEnter={() => { setFocusedIndex(index); setQuery2(data.name) }}
+            onMouseEnter={() => { setFocusedIndex(index); }}
             onMouseDown={() => navigate(`/${searchIDInArray(data)}`)}
           >
             <p className={`flex flex-row items-start font-normal ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} 
