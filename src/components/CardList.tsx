@@ -97,7 +97,7 @@ const CardList: FC<QueryProps> = ({ launches, state, setData }) => {
         <Grid>
           {launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }, index: number) => (
             <Link
-              to={`/${searchStringInArray(data)}`}
+              to={`/search/${searchStringInArray(data)}`}
               state={{ id: data.id }}
               className="w-full"
               key={index}

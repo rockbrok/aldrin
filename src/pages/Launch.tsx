@@ -1,4 +1,3 @@
-import { useLocation } from 'react-router-dom';
 import { findLaunch } from '../hooks/useLaunches';
 import { ReactElement, ReactFragment } from 'react';
 import {
@@ -16,17 +15,16 @@ import {
 import { LaunchMap } from '../LaunchMap';
 
 const Launch = () => {
-  const location = useLocation();
-  const path = location.pathname.replace('/', '');
+  const pathname = window.location.pathname.split('/');
 
   function searchStringInArray() {
     for (let i = 0; i < LaunchMap.length; i++) {
-      if (LaunchMap[i].name.match(path)) return String(LaunchMap[i].id);
+      if (LaunchMap[i].name.match(pathname[2])) return String(LaunchMap[i].id);
     }
     return "";
   }
 
-  const launch = findLaunch(searchStringInArray() || location.state.id);
+  const launch = findLaunch(searchStringInArray());
 
   const data = launch?.data?.launch;
 

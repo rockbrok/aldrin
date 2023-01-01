@@ -6,7 +6,7 @@ import { SearchBar } from './SearchBar';
 
 const Header: FC<QueryProps & SearchProps> = ({ launches, state, setData, searchParams, setSearchParams }) => {
   const location = useLocation();
-  const routes = [{ path: "/:id" }]
+  const routes = [{ path: "/search/:id" }]
   const route = matchRoutes(routes, location);
 
   const routeTest = () => {
@@ -31,7 +31,7 @@ const Header: FC<QueryProps & SearchProps> = ({ launches, state, setData, search
     <header className="relative mt-4 w-[900px] justify-between">
       <Container>
         <div className="flex flex-row items-end h-9 row-span-1 col-span-2">
-          <Link to="/" reloadDocument>
+          <Link to="/search" reloadDocument>
             <h1 className="text-yellow w-fit px-2 text-2xl cursor-pointer">
               aldrin
             </h1>

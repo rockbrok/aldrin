@@ -800,16 +800,16 @@ video {
   height: 312px;
 }
 
+.w-\[900px\] {
+  width: 900px;
+}
+
 .w-full {
   width: 100%;
 }
 
 .w-10\/12 {
   width: 83.333333%;
-}
-
-.w-\[900px\] {
-  width: 900px;
 }
 
 .w-fit {

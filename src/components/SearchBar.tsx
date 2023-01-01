@@ -223,7 +223,7 @@ const ClearInputButton = ({ query, setData, setQuery, setQuery2, searchParams, s
   } else return null
 }
 
-const InputDropdown = ({ state, setDropdownIsOpen, query, setQuery2, focusedIndex, results, setFocusedIndex, navigate }: any) => {
+const InputDropdown = ({ state, setDropdownIsOpen, query, focusedIndex, results, setFocusedIndex, navigate }: any) => {
 
   const searchIDInArray = (data: any) => {
     for (let i = 0; i < LaunchMap.length; i++) {
@@ -257,13 +257,13 @@ const InputDropdown = ({ state, setDropdownIsOpen, query, setQuery2, focusedInde
       {results().map((data: { name: string; id: string }, index: number) => {
         return (
           <Link
-            to={`/${searchIDInArray(data)}`}
+            to={`/search/${searchIDInArray(data)}`}
             onClickCapture={() => setDropdownIsOpen(false)}
             state={{ id: data.id }}
             className="w-full h-min relative"
             key={index}
             onMouseEnter={() => { setFocusedIndex(index); }}
-            onMouseDown={() => navigate(`/${searchIDInArray(data)}`)}
+            onMouseDown={() => navigate(`/search/${searchIDInArray(data)}`)}
           >
             <p className={`flex flex-row items-start font-normal ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} 
               rounded-sm`}
@@ -287,7 +287,7 @@ const SubmitButton = ({ setDropdownIsOpen, handleClick, query, navigate }: any) 
     onClick={() => {
       handleClick(query);
       setDropdownIsOpen(false);
-      navigate("/");
+      navigate("/search");
     }}
   >
     <Search

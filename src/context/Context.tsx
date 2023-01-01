@@ -1,7 +1,6 @@
 import { createContext, useReducer } from "react";
-import { useLocation } from "react-router-dom";
 
-const FilterContext = createContext(null as any);
+const Context = createContext(null as any);
 
 const ACTIONS = {
   SET: "set",
@@ -17,10 +16,8 @@ const reducer = (state: any, action: { type: string, name: string, payload: obje
   }
 }
 
-const FilterContextProvider = ({ children }: any) => {
-
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
+const ContextProvider = ({ children }: any) => {
+  const params = new URLSearchParams(document.location.search)
 
   const initialState = {
     orbit: params.get("orbit") ?? "",
@@ -43,10 +40,10 @@ const FilterContextProvider = ({ children }: any) => {
   };
 
   return (
-    <FilterContext.Provider value={{ state, setData }}>
+    <Context.Provider value={{ state, setData }}>
       {children}
-    </FilterContext.Provider>
+    </Context.Provider>
   );
 }
 
-export { FilterContext, FilterContextProvider }
+export { Context, ContextProvider }

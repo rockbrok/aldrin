@@ -8,6 +8,7 @@ import {
 } from '@apollo/client';
 
 import './index.css';
+import { ContextProvider } from './context/Context';
 
 const client = new ApolloClient({
   uri: "https://api.spacex.land/graphql/",
@@ -21,7 +22,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <ContextProvider >
+        <App />
+      </ContextProvider>
     </ApolloProvider>
   </React.StrictMode>
 );
