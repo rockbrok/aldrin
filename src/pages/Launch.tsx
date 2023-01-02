@@ -13,6 +13,7 @@ import {
   Block
 } from "@mui/icons-material";
 import { LaunchMap } from '../LaunchMap';
+import { Helmet } from "react-helmet";
 
 const Launch = () => {
   const pathname = window.location.pathname.split('/');
@@ -56,31 +57,71 @@ const Launch = () => {
       );
     default:
       return (
-        <section className="mt-16 mb-8 flex flex-col grid grid-cols-4 gap-4">
-          <div className="w-full h-fit p-4 text-4xl col-span-2">
-            {data.mission_name}
-          </div>
-          <section className="grid grid-flow-row col-span-4 grid-cols-4 gap-4 rounded-sm">
-            <div className="col-span-3 grid grid-cols-3 grid-flow-row auto-rows-max gap-4">
-              {data.links.flickr_images[1] !== undefined ?
-                <div className="col-span-3 h-[312px]">
-                  <img src={data.links.flickr_images[1]} alt="launch" className="object-center w-full h-full object-cover rounded-sm" />
-                </div> : null}
-              <div className="pr-24 col-span-3 h-fit text-lg bg-grey rounded-sm p-4 py-6 leading-6">
-                {data.details ?? "No details"}
-              </div>
+        <>
+          <Helmet>
+            <title>{data.mission_name} | aldrin</title>
+          </Helmet>
+          <section className="mt-16 mb-8 flex flex-col grid grid-cols-4 gap-4">
+            <div
+              tabIndex={0}
+              aria-label="Launch mission name"
+              className="w-full h-fit p-4 text-4xl col-span-2"
+            >
+              <h1 tabIndex={0}>{data.mission_name}</h1>
             </div>
-            <ItemList
-              data={data}
-            />
+            <section className="grid grid-flow-row col-span-4 grid-cols-4 gap-4 rounded-sm">
+              <div className="col-span-3 grid grid-cols-3 grid-flow-row auto-rows-max gap-4">
+                <Image
+                  data={data}
+                />
+                <Details
+                  data={data}
+                />
+              </div>
+              <ItemList
+                data={data}
+              />
+            </section>
           </section>
-        </section>
+        </>
       )
   }
 }
 
+const Image = ({ data }: any) => (
+  <>
+    {data.links.flickr_images[1] === undefined ? <></> :
+      <div className="col-span-3 h-[312px]">
+        <img
+          src={data.links.flickr_images[1]}
+          alt="Launch photo"
+          className="object-center w-full h-full object-cover rounded-sm"
+          aria-label="Launch photo"
+          tabIndex={0}
+        />
+      </div>
+    }
+  </>
+);
+
+const Details = ({ data }: any) => (
+  <div
+    tabIndex={0}
+    aria-label="Launch details"
+    className="pr-24 col-span-3 h-fit text-lg bg-grey rounded-sm p-4 py-6 leading-6"
+  >
+    <p tabIndex={0}>
+      {data.details ?? "No details"}
+    </p>
+  </div>
+)
+
 const ItemList = ({ data }: any) => (
-  <div className="flex flex-col gap-4 col-span-1 h-fit bg-grey rounded-sm p-4 py-6">
+  <section
+    tabIndex={0}
+    aria-label="Launch information"
+    className="flex flex-col gap-4 col-span-1 h-fit bg-grey rounded-sm p-4 py-6"
+  >
     <Item
       title="Rocket name"
       icon={<Assignment />}
@@ -110,9 +151,8 @@ const ItemList = ({ data }: any) => (
       title="Orbit"
       icon={<Public />}
       data={
-        data.rocket.second_stage.payloads[0].orbit_params.regime !== null ?
-          data.rocket.second_stage.payloads[0].orbit_params.regime.replaceAll('-', ' ') :
-          "Unknown"
+        data.rocket.second_stage.payloads[0].orbit_params.regime === null ? "Unknown" :
+          data.rocket.second_stage.payloads[0].orbit_params.regime.replaceAll('-', ' ')
       }
     />
     <Item
@@ -120,15 +160,17 @@ const ItemList = ({ data }: any) => (
       icon={<TaskAlt />}
       data={data.launch_success === true ? "Success" : "Failure"}
     />
-  </div>
+  </section>
 );
 
 const Item = (props: { data: string; icon: ReactElement; title: string; }) => (
-  <div className="flex flex-row gap-4 items-center w-max capitalize">
-    <div title={props.title}>
-      {props.icon}
-    </div>
-    {props.data}
+  <div
+    className="flex flex-row gap-4 items-center w-max capitalize"
+    aria-label={props.title + props.data}
+    tabIndex={0}
+  >
+    {props.icon}
+    <span>{props.data}</span>
   </div>
 );
 
