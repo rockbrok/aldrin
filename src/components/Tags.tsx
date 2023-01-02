@@ -13,6 +13,7 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
           key={index}>
           <span
             className={item.label === "orbit" ? "capitalize" : ""}
+            id={item.label}
           >
             {String(item.value).replaceAll('-', ' ')}
           </span>
@@ -20,7 +21,7 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
             icon="Cancel"
             setData={setData}
             payload=""
-            name={item.label}
+            label={item.label}
             func={() => {
               tagsList.splice(index, 1);
               searchParams.delete(item.label);

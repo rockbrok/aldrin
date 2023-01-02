@@ -2,22 +2,14 @@ import { FC } from "react";
 import { ClearButtonProps } from "../interfaces/Props";
 import { Cancel, Clear } from "@mui/icons-material";
 
-const ClearButton: FC<ClearButtonProps> = ({ setData, payload, name, func, icon, className }) => {
-
-  const Button = ({ icon }: any) => {
-    switch (true) {
-      case icon === "Clear":
-        return <Clear style={{ fontSize: "20px" }} />;
-      case icon === "Cancel":
-        return <Cancel style={{ fontSize: "20px" }} />;
-      default:
-        return <Cancel style={{ fontSize: "20px" }} />;
-    }
-  }
+const ClearButton: FC<ClearButtonProps> = ({ setData, payload, label, func, icon, className }) => {
 
   return (
-    <div
+    <button
       title="Clear"
+      type="reset"
+      tabIndex={0}
+      aria-label="Clear"
       className={`flex mr-3 select-none cursor-pointer ${className}`}
       onClick={() => {
         setData({
@@ -26,13 +18,15 @@ const ClearButton: FC<ClearButtonProps> = ({ setData, payload, name, func, icon,
         });
         setData({
           payload: payload,
-          name: name,
+          name: label,
         });
         func();
       }}
     >
-      <Button icon={icon} />
-    </div>
+      {icon === "Clear" ? <Clear style={{ fontSize: "20px" }} /> :
+        <Cancel style={{ fontSize: "20px" }} />
+      }
+    </button>
   )
 }
 

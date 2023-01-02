@@ -31,8 +31,8 @@ const Header: FC<SearchProps> = ({ state, setData, searchParams, setSearchParams
     <header className="relative mt-4 w-[900px] justify-between">
       <Container>
         <div className="flex flex-row items-end h-9 row-span-1 col-span-2">
-          <Link to="/search" reloadDocument>
-            <h1 className="text-yellow w-fit px-2 text-2xl cursor-pointer">
+          <Link to="/search" reloadDocument tabIndex={0} aria-labelledby="h1">
+            <h1 id="h1" className="text-yellow w-fit px-2 text-2xl cursor-pointer">
               aldrin
             </h1>
           </Link>
@@ -71,6 +71,7 @@ const Container = ({ children }: any) => (
 const Title = () => (
   <h3 className="col-span-3 mt-6 text-6xl whitespace-pre-line text-transparent tracking-tight
     bg-clip-text bg-gradient-to-r from-blue to-darkgrey"
+    tabIndex={0}
   >
     A search tool for spacex {`\n`}launches
   </h3>

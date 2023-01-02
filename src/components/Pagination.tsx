@@ -6,6 +6,7 @@ const Pagination: FC<QueryProps> = ({ state, launches, setData }) => (
     {Array.from({ length: launches.count }, (_, index: number) => (
       <button
         type="button"
+        aria-label={`Page ${index + 1}`}
         tabIndex={0}
         key={index + 1}
         disabled={state.activePage === (index + 1)}

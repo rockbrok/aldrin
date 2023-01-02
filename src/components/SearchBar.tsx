@@ -131,6 +131,8 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
         className={`relative ${state.isIDRoute ? 'w-full' : 'col-span-3'} flex flex-row`}
         id="searchContainer"
         onClick={inputFocus}
+        tabIndex={0}
+        aria-label="Search bar"
       >
         <OutsideClickHandler
           onOutsideClick={() => {
@@ -142,7 +144,6 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
               handleClick(query, e);
               setDropdownIsOpen(false);
             }}
-            tabIndex={1}
             onKeyDown={handleKeyDown}
             onBlur={resetSearch}
             className={`flex flex-row items-center 
@@ -205,7 +206,7 @@ const ClearInputButton = ({ query, setData, setQuery, setQuery2, searchParams, s
           setData={setData}
           payload=""
           className="h-full !w-12 items-center justify-center mr-0"
-          name="query"
+          label="query"
           func={() => {
             setQuery("");
             setQuery2("");

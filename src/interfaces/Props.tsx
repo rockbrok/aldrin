@@ -43,7 +43,7 @@ interface SelectProps {
 interface ClearButtonProps {
   setData: any;
   payload: { value: string; label: string } | string | number;
-  name: string;
+  label: string;
   func?: any | undefined;
   icon: string;
   className?: string;
