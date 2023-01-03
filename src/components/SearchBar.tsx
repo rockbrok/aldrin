@@ -1,5 +1,5 @@
-import { FC, useState, KeyboardEventHandler, useCallback, useEffect } from 'react';
-import { QueryProps, SearchProps } from '../interfaces/Props';
+import { FC, useState, KeyboardEventHandler, useEffect, useRef } from 'react';
+import { SearchProps } from '../interfaces/Props';
 import { Search } from "@mui/icons-material";
 import { LaunchMap } from '../LaunchMap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,33 +8,24 @@ import OutsideClickHandler from "react-outside-click-handler";
 // components
 import { ClearButton } from './ClearButton';
 
+const searchIDInArray = (data: any) => {
+  for (let i = 0; i < LaunchMap.length; i++) {
+    if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
+  }
+}
+
 const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
 
   const [query, setQuery] = useState<string>(state.query ?? "");
-  const [query2, setQuery2] = useState<string>("");
+  const [query2, setQuery2] = useState<string>(state.query.slice());
+
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
   const launches = queryLaunches();
   const navigate = useNavigate();
-
-  const inputFocus = () => {
-    const input = document.querySelector('input');
-    input?.focus();
-  }
-
-  const inputBlur = () => {
-    const input = document.getElementById('input')
-    input?.blur();
-  }
-
-  const handleClick = (query: string, e: any) => {
-    setData({
-      payload: query,
-      name: "query",
-    })
-    e.preventDefault();
-    searchParams.set("q", query);
-    setSearchParams(searchParams);
-  }
+  const focusInput = () => inputRef.current != null && inputRef.current.focus();
+  const blurInput = () => inputRef.current != null && inputRef.current.blur();
 
   const getResults = (launchArray: { name: string; id: string; }[]) => {
     switch (true) {
@@ -45,82 +36,67 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
       case query.length === 0:
         return;
       default:
-        {
-          launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }) => {
-            if (data.mission_name.toLowerCase().includes(query.toLowerCase())) {
-              launchArray.push({ name: data.mission_name, id: data.id });
-            }
-          })
-        }
+        launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }) => {
+          if (data.mission_name.toLowerCase().includes(query.toLowerCase())) {
+            launchArray.push({ name: data.mission_name, id: data.id });
+          }
+        })
     }
   }
 
   const results = () => {
     const launchArray: { name: string; id: string; }[] = [];
     getResults(launchArray);
-    return launchArray.slice(0, 6)
+    return launchArray.slice(0, 6);
   }
 
-  const [focusedIndex, setFocusedIndex] = useState(-1);
-
-  const resetSearch = useCallback(() => {
-    setDropdownIsOpen(false);
-    inputBlur;
-    setFocusedIndex(-1);
-  }, []);
-
-  useEffect(() => {
-    if (focusedIndex === 6) {
-      setQuery2(query)
-    }
-  });
-
+  const handleClick = (query: string, e: any) => {
+    e.preventDefault();
+    setData({
+      payload: query,
+      name: "query",
+    })
+    navigate("/search");
+    searchParams.set("q", query);
+    setSearchParams(searchParams);
+  }
 
   const handleKeyDown: KeyboardEventHandler<HTMLFormElement> = (e) => {
     const { key } = e;
-    let nextIndexCount = -1;
-
     const length = results().length + 1;
-    const data = results()[focusedIndex];
+    let nextIndexCount = -1;
 
     const condition = () => {
       if (nextIndexCount > -1 && nextIndexCount < 6) {
-        e.preventDefault();
         const data = results()[nextIndexCount];
         setQuery2(data.name);
+      } else if (nextIndexCount === 6) {
+        setQuery2(query)
       }
     }
 
-    // Move down
-    if (e.key === "ArrowDown") {
-      nextIndexCount = (focusedIndex + 1) % length;
-      condition();
+    switch (true) {
+      case (e.key === "ArrowDown"):
+        nextIndexCount = (focusedIndex + 1) % length;
+        setFocusedIndex(nextIndexCount);
+        condition();
+        break;
+      case (key === "ArrowUp"):
+        e.preventDefault();
+        nextIndexCount = (focusedIndex + length - 1) % length;
+        setFocusedIndex(nextIndexCount);
+        condition();
+        break;
+      case (key === "Escape"):
+        blurInput();
+        setDropdownIsOpen(false);
+        setFocusedIndex(-1);
+        break;
+      case (key === "Enter"):
+        e.preventDefault();
+        navigate(`/search/${searchIDInArray(results()[focusedIndex])}`)
+        break;
     }
-
-    // Move up
-    if (key === "ArrowUp") {
-      nextIndexCount = (focusedIndex + length - 1) % length;
-      condition();
-    }
-
-    // Hide search results
-    if (key === "Escape") {
-      resetSearch();
-    }
-
-    // // Select the current item
-    if (key === "Enter") {
-      e.preventDefault();
-
-      const searchIDInArray = (data: any) => {
-        for (let i = 0; i < LaunchMap.length; i++) {
-          if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
-        }
-      }
-      navigate(`/${searchIDInArray(data)}`)
-    }
-
-    setFocusedIndex(nextIndexCount);
   };
 
   return (
@@ -128,9 +104,9 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
       "col-span-4 grid grid-cols-4 grid-rows-1 gap-4 mt-10"}
     >
       <div
-        className={`relative ${state.isIDRoute ? 'w-full' : 'col-span-3'} flex flex-row`}
+        className={`relative flex flex-row ${state.isIDRoute ? 'w-full' : 'col-span-3'}`}
         id="searchContainer"
-        onClick={inputFocus}
+        onClick={focusInput}
         tabIndex={0}
         aria-label="Search bar"
       >
@@ -145,27 +121,20 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
               setDropdownIsOpen(false);
             }}
             onKeyDown={handleKeyDown}
-            onBlur={resetSearch}
             className={`flex flex-row items-center 
               ${state.isIDRoute ? 'h-[36px]' : 'h-[46px]'} 
               !w-full bg-grey rounded-sm py-1 cursor-default`}
           >
-            <input
-              type="text"
-              role="search"
-              spellCheck="false"
-              className={`relative placeholder:text-black !w-full bg-transparent font-normal rounded-sm 
-                ${state.isIDRoute ? 'my-1.5 mx-3' : 'm-3'} focus:outline-none cursor-text select-none`}
-              value={query2}
-              onFocus={() => setDropdownIsOpen(true)}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setQuery2(e.target.value);
-                setDropdownIsOpen(true);
-              }}
+            <Input
+              state={state}
+              inputRef={inputRef}
+              query2={query2}
+              setDropdownIsOpen={setDropdownIsOpen}
+              setQuery={setQuery}
+              setQuery2={setQuery2}
             />
             <div className="!w-fit relative h-full">
-              <ClearInputButton
+              <Clear
                 query={query}
                 setQuery={setQuery}
                 setQuery2={setQuery2}
@@ -173,7 +142,7 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
                 searchParams={searchParams}
                 setSearchParams={setSearchParams}
               />
-              <SubmitButton
+              <Submit
                 setDropdownIsOpen={setDropdownIsOpen}
                 handleClick={handleClick}
                 query={query}
@@ -181,7 +150,7 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
               />
             </div>
           </form>
-          <InputDropdown
+          <Dropdown
             focusedIndex={focusedIndex}
             navigate={navigate}
             setFocusedIndex={setFocusedIndex}
@@ -197,7 +166,25 @@ const SearchBar: FC<SearchProps> = ({ state, setData, searchParams, setSearchPar
   );
 }
 
-const ClearInputButton = ({ query, setData, setQuery, setQuery2, searchParams, setSearchParams }: any) => {
+const Input = ({ state, query2, setDropdownIsOpen, setQuery, setQuery2, inputRef }: any) => (
+  <input
+    type="text"
+    role="search"
+    spellCheck="false"
+    ref={inputRef}
+    className={`relative placeholder:text-black !w-full bg-transparent font-normal rounded-sm 
+        ${state.isIDRoute ? 'my-1.5 mx-3' : 'm-3'} focus:outline-none cursor-text select-none`}
+    value={query2}
+    onFocus={() => setDropdownIsOpen(true)}
+    onChange={(e) => {
+      setQuery(e.target.value);
+      setQuery2(e.target.value);
+      setDropdownIsOpen(true);
+    }}
+  />
+)
+
+const Clear = ({ query, setData, setQuery, setQuery2, searchParams, setSearchParams }: any) => {
   if (query.length !== 0) {
     return (
       <div className="flex flex-row h-full mr-12 items-center">
@@ -224,63 +211,55 @@ const ClearInputButton = ({ query, setData, setQuery, setQuery2, searchParams, s
   } else return null
 }
 
-const InputDropdown = ({ state, setDropdownIsOpen, query, focusedIndex, results, setFocusedIndex, navigate }: any) => {
-
-  const searchIDInArray = (data: any) => {
-    for (let i = 0; i < LaunchMap.length; i++) {
-      if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
-    }
-  }
-
-  const boldMatchCharacters = ({ result, query }: any) => {
-    const textArray = result.split(RegExp(query, "ig"));
-    const match = result.match(RegExp(query, "ig"));
-
-    return (
-      <>
-        {textArray.map((item: any, index: number) => (
-          <span key={index}>
-            {item}
-            {index !== textArray.length - 1 && match && (
-              <b>{match[index]}</b>
-            )}
-          </span>
-        ))}
-      </>
-    );
-  }
+const boldMatchCharacters = ({ result, query }: any) => {
+  const textArray = result.split(RegExp(query, "ig"));
+  const match = result.match(RegExp(query, "ig"));
 
   return (
-    <div
-      className={`bg-grey w-full h-fit absolute left-0 
-        ${state.isIDRoute ? 'top-[35px]' : 'top-[45px]'} z-10 border-2 border-b-[1px] border-grey`}
-    >
-      {results().map((data: { name: string; id: string }, index: number) => {
-        return (
-          <Link
-            to={`/search/${searchIDInArray(data)}`}
-            onClickCapture={() => setDropdownIsOpen(false)}
-            state={{ id: data.id }}
-            className="w-full h-min relative"
-            key={index}
-            onMouseEnter={() => { setFocusedIndex(index); }}
-            onMouseDown={() => navigate(`/search/${searchIDInArray(data)}`)}
-          >
-            <p className={`flex flex-row items-start font-normal ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} 
-              rounded-sm`}
-              style={index === focusedIndex ? { backgroundColor: "#000", color: "#fff" } : {}}
-            >
-              {boldMatchCharacters({ result: data.name, query: query })}
-            </p>
-          </Link>
-        )
-      })
-      }
-    </div>
+    <>
+      {textArray.map((item: any, index: number) => (
+        <span key={index}>
+          {item}
+          {index !== textArray.length - 1 && match && (
+            <b>{match[index]}</b>
+          )}
+        </span>
+      ))}
+    </>
   );
 }
 
-const SubmitButton = ({ setDropdownIsOpen, handleClick, query, navigate }: any) => (
+const Dropdown = ({ state, setDropdownIsOpen, query, focusedIndex, results, setFocusedIndex, navigate }: any) => (
+  <div
+    className={`bg-grey w-full h-fit absolute left-0 
+      z-10 border-2 border-b-[1px] border-grey
+      ${state.isIDRoute ? 'top-[35px]' : 'top-[45px]'}`}
+  >
+    {results().map((data: { name: string; id: string }, index: number) => {
+      return (
+        <Link
+          to={`/search/${searchIDInArray(data)}`}
+          onClickCapture={() => setDropdownIsOpen(false)}
+          state={{ id: data.id }}
+          className="w-full h-min relative"
+          key={index}
+          onMouseEnter={() => { setFocusedIndex(index); }}
+          onMouseDown={() => navigate(`/search/${searchIDInArray(data)}`)}
+        >
+          <p
+            className={`flex flex-row items-start font-normal rounded-sm
+              ${state.isIDRoute ? 'py-1.5 px-3' : 'p-3'} `}
+            style={index === focusedIndex ? { backgroundColor: "#000", color: "#fff" } : {}}
+          >
+            {boldMatchCharacters({ result: data.name, query: query })}
+          </p>
+        </Link>
+      )
+    })}
+  </div>
+);
+
+const Submit = ({ setDropdownIsOpen, handleClick, query, navigate }: any) => (
   <button
     className="absolute right-0 top-0 h-full w-12 items-center justify-center m-0"
     title="Search"

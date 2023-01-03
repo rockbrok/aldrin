@@ -25,8 +25,12 @@ const Launch = () => {
     return "";
   }
 
-  const launch = findLaunch(searchStringInArray());
+  let test = true;
+  if (searchStringInArray() == "") {
+    test = false;
+  }
 
+  const launch = findLaunch(searchStringInArray());
   const data = launch?.data?.launch;
 
   const IconWrapper = (props: { children: string | ReactFragment | ReactElement }) => (
@@ -43,6 +47,7 @@ const Launch = () => {
         </IconWrapper>
       );
     case launch.data == undefined:
+    case test === false:
       return (
         <IconWrapper>
           <Block className="filter-blue" />
