@@ -1,7 +1,7 @@
 import { useOutletContext } from 'react-router-dom';
 // Components
 import { Filter } from '../components/Filter';
-import { CardList } from '../components/CardList';
+import { List } from '../components/List';
 import { Pagination } from "../components/Pagination";
 
 const Search = () => {
@@ -15,7 +15,7 @@ const Search = () => {
         searchParams={searchParams}
         setSearchParams={setSearchParams}
       />
-      <CardList
+      <List
         state={state}
         setData={setData}
         launches={launches}

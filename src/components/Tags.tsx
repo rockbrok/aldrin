@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import { SearchProps, TagProps } from '../interfaces/Props';
-// components
+// Components
 import { ClearButton } from './ClearButton';
+// Hooks
+import { removeKebab } from '../hooks/useRemoveKebab';
 
 const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, setSearchParams }) => (
   <div className="grid col-span-3">
@@ -15,7 +17,7 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
             className={item.label === "orbit" ? "capitalize" : ""}
             id={item.label}
           >
-            {String(item.value).replaceAll('-', ' ')}
+            {removeKebab(item.value)}
           </span>
           <ClearButton
             icon="Cancel"

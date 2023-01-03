@@ -1,4 +1,4 @@
-import { FC, useState, KeyboardEventHandler, useEffect, useRef } from 'react';
+import { FC, useState, KeyboardEventHandler, useRef } from 'react';
 import { SearchProps } from '../interfaces/Props';
 import { Search } from "@mui/icons-material";
 import { LaunchMap } from '../LaunchMap';

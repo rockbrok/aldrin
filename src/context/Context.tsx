@@ -25,7 +25,7 @@ const ContextProvider = ({ children }: any) => {
     type: params.get("type") ?? "",
     query: params.get("q") ?? "",
     isIDRoute: false,
-    placeholderCardCount: 12,
+    maxCards: 12,
     activePage: 1,
   }
 

@@ -3,6 +3,8 @@ import { SearchProps } from '../interfaces/Props';
 // Components
 import { Select } from './Select';
 import { Tags } from './Tags';
+// Hooks
+import { removeKebab } from '../hooks/useRemoveKebab';
 
 const Filter: FC<SearchProps> = ({ state, setData, searchParams, setSearchParams }) => {
 
@@ -12,8 +14,6 @@ const Filter: FC<SearchProps> = ({ state, setData, searchParams, setSearchParams
   }
 
   const [tagsList] = useState<StateProperties[]>([]);
-
-  const removeKebab = (str: string) => String(str).replaceAll('-', ' ');
 
   const tagSwitch = (props: { obj: any; label: string; }) => {
     switch (true) {

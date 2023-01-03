@@ -1,0 +1,1 @@
+export const removeKebab = (str: string | null | number) => String(str).replaceAll('-', ' ');
