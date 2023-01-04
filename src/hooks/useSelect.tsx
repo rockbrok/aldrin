@@ -1,5 +1,3 @@
-import { spliceTags } from "./useTags";
-
 const handleSelect = ({ setData, state, label, item, searchParams, setSearchParams }: any) => {
   setData({
     payload: item.value,
@@ -9,7 +7,11 @@ const handleSelect = ({ setData, state, label, item, searchParams, setSearchPara
     payload: 1,
     name: "activePage",
   });
-  spliceTags(state, label);
+  state.tags.map((item: { value: string, label: string }, index: number) => {
+    if (item.label == label) {
+      state.tags.splice(index, 1);
+    }
+  });
   state.tags.push({ value: item.value, label });
   searchParams.set(label, item.value);
   setSearchParams(searchParams);

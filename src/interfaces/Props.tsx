@@ -7,13 +7,6 @@ interface SearchProps {
   setSearchParams: any;
 }
 
-interface TagProps {
-  tags: { value: string | number | null; label: string }[];
-  setData: (arg0: {
-    payload: { value: string; label: string } | number; name: string;
-  }) => void;
-}
-
 interface QueryProps {
   state: any;
   setData: (arg0: {
@@ -30,7 +23,6 @@ interface QueryProps {
 interface SelectProps {
   items: any[];
   label: string;
-  helper?: string;
   showItems?: boolean;
   state: any;
   stateKey: string;
@@ -48,4 +40,4 @@ interface ClearButtonProps {
   className?: string;
 }
 
-export type { QueryProps, SelectProps, ClearButtonProps, TagProps, SearchProps }
+export type { QueryProps, SelectProps, ClearButtonProps, SearchProps }

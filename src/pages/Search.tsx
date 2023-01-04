@@ -6,7 +6,6 @@ import { List } from '../components/List';
 import { Pagination } from "../components/Pagination";
 // Data
 import { years, types, orbits } from '../data/SelectData';
-import { renderTags } from '../hooks/useTags';
 
 const Search = () => {
   const [launches, state, setData, searchParams, setSearchParams]: any = useOutletContext();
@@ -18,34 +17,34 @@ const Search = () => {
           <Select
             items={years()}
             label="year"
-            setData={setData}
             state={state}
             stateKey={state.year}
+            setData={setData}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />
           <Select
             items={types}
             label="type"
-            setData={setData}
             state={state}
             stateKey={state.type}
+            setData={setData}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />
           <Select
             items={orbits}
             label="orbit"
-            setData={setData}
             state={state}
             stateKey={state.orbit}
+            setData={setData}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />
         </div>
         <Tag
+          state={state}
           setData={setData}
-          tags={renderTags(state)}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
         />
