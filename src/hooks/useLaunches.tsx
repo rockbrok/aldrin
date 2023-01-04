@@ -20,7 +20,7 @@ const queryLaunches = () => {
   return { loading, error, data };
 }
 
-const findLaunch = (id: string) => {
+const findLaunch = (id: string | undefined) => {
   const { loading, error, data } = useQuery(FindLaunch, {
     variables: { id },
   });

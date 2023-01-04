@@ -1,5 +1,5 @@
 import { findLaunch } from '../hooks/useLaunches';
-import { ReactElement, ReactFragment } from 'react';
+import { ReactElement } from 'react';
 import {
   Assignment,
   Rocket,
@@ -12,51 +12,34 @@ import {
   Cached,
   Block
 } from "@mui/icons-material";
-import { LaunchMap } from '../LaunchMap';
 import { Helmet } from "react-helmet";
+// Components
+import { IconWrapper } from '../components/IconWrapper';
+// Hooks
+import { getLaunchID } from '../hooks/useLaunchMap';
 
 const Launch = () => {
   const pathname = window.location.pathname.split('/');
-
-  function searchStringInArray() {
-    for (let i = 0; i < LaunchMap.length; i++) {
-      if (LaunchMap[i].name.match(pathname[2])) return String(LaunchMap[i].id);
-    }
-    return "";
-  }
-
-  let test = true;
-  if (searchStringInArray() == "") {
-    test = false;
-  }
-
-  const launch = findLaunch(searchStringInArray());
+  const launch = findLaunch(getLaunchID(pathname));
   const data = launch?.data?.launch;
-
-  const IconWrapper = (props: { children: string | ReactFragment | ReactElement }) => (
-    <div className="flex flex-col items-center justify-center mt-auto w-full mt-28">
-      {props.children}
-    </div>
-  );
 
   switch (true) {
     case launch.loading:
       return (
-        <IconWrapper>
+        <IconWrapper style="w-full mt-28">
           <Cached className="animate-spin filter-blue" />
         </IconWrapper>
       );
     case launch.data == undefined:
-    case test === false:
       return (
-        <IconWrapper>
+        <IconWrapper style="w-full mt-28">
           <Block className="filter-blue" />
           No data
         </IconWrapper>
       )
     case Boolean(launch.error):
       return (
-        <IconWrapper>
+        <IconWrapper style="w-full mt-28">
           <Error className="filter-blue" />
         </IconWrapper>
       );

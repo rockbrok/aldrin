@@ -2,30 +2,13 @@ import { FC, MouseEventHandler, ReactFragment } from 'react'
 import { QueryProps } from '../interfaces/Props';
 import { RocketLaunch, Error, Block } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { LaunchMap } from '../LaunchMap';
+// Components
+import { IconWrapper } from './IconWrapper';
 // Hooks
 import { useCardCount } from '../hooks/useCardCount';
+import { getLaunchName } from '../hooks/useLaunchMap';
 
 const List: FC<QueryProps> = ({ launches, state }) => {
-
-  const IconWrapper = (props: { children: string | ReactFragment }) => (
-    <div className="flex flex-col items-center justify-center mt-auto">
-      {props.children}
-    </div>
-  );
-
-  const Grid = (props: { children: ReactFragment, className?: string }) => (
-    <div className={`grid gap-4 grid-cols-4 grid-rows-auto my-4 place-items-center ${props.className}`}>
-      {props.children}
-    </div>
-  );
-
-  function searchStringInArray(data: any) {
-    for (let i = 0; i < LaunchMap.length; i++) {
-      if (LaunchMap[i].id == Number(data.id)) return LaunchMap[i].name;
-    }
-    return "";
-  }
 
   switch (true) {
     case launches.loading:
@@ -61,7 +44,7 @@ const List: FC<QueryProps> = ({ launches, state }) => {
         <Grid>
           {launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }, index: number) => (
             <Link
-              to={`/search/${searchStringInArray(data)}`}
+              to={`/search/${getLaunchName(data)}`}
               state={{ id: data.id }}
               className="w-full"
               key={index}
@@ -78,6 +61,12 @@ const List: FC<QueryProps> = ({ launches, state }) => {
       );
   }
 };
+
+const Grid = (props: { children: ReactFragment, className?: string }) => (
+  <div className={`grid gap-4 grid-cols-4 grid-rows-auto my-4 place-items-center ${props.className}`}>
+    {props.children}
+  </div>
+);
 
 const Card = (props: { children?: ReactFragment; className?: any, click?: MouseEventHandler<HTMLDivElement> }) => (
   <div className={`flex flex-col items-center justify-center 
