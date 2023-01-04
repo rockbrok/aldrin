@@ -5,10 +5,10 @@ import { ClearButton } from './ClearButton';
 // Hooks
 import { removeKebab } from '../hooks/useRemoveKebab';
 
-const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, setSearchParams }) => (
+const Tag: FC<TagProps & SearchProps> = ({ tags, setData, searchParams, setSearchParams }) => (
   <div className="grid col-span-3">
     <div className="flex flex-row gap-4">
-      {tagsList.map((item: { value: string | number | null, label: string }, index: number) => (
+      {tags.map((item: { value: string | number | null, label: string }, index: number) => (
         <div className="flex flex-row items-center 
           h-9 w-fit cursor-default
           bg-grey rounded-sm gap-4 pl-3"
@@ -25,7 +25,7 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
             payload=""
             label={item.label}
             func={() => {
-              tagsList.splice(index, 1);
+              tags.splice(index, 1);
               searchParams.delete(item.label);
               setSearchParams(searchParams);
             }}
@@ -36,4 +36,4 @@ const Tags: FC<TagProps & SearchProps> = ({ tagsList, setData, searchParams, set
   </div>
 )
 
-export { Tags }
+export { Tag }

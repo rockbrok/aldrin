@@ -3,7 +3,7 @@ import { SelectProps, SearchProps } from '../interfaces/Props';
 import OutsideClickHandler from "react-outside-click-handler";
 import { Sort } from "@mui/icons-material";
 
-const Select: FC<SelectProps & SearchProps> = ({ state, label, items, setData, helper, tagsList, searchParams, setSearchParams }) => {
+const Select: FC<SelectProps & SearchProps> = ({ state, label, items, setData, helper, tags, searchParams, setSearchParams }) => {
   const [showItems, setShowItems] = useState(false);
 
   return (
@@ -42,7 +42,7 @@ const Select: FC<SelectProps & SearchProps> = ({ state, label, items, setData, h
               state={state}
               setData={setData}
               showItems={showItems}
-              tagsList={tagsList}
+              tags={tags}
               label={label}
               searchParams={searchParams}
               setSearchParams={setSearchParams}
@@ -54,12 +54,12 @@ const Select: FC<SelectProps & SearchProps> = ({ state, label, items, setData, h
   );
 };
 
-const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems, tagsList, label, searchParams, setSearchParams }) => {
+const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems, tags, label, searchParams, setSearchParams }) => {
 
   const spliceArray = () => {
-    tagsList.map((item: any, index: number) => {
+    tags.map((item: any, index: number) => {
       if (item.label == label) {
-        tagsList.splice(index, 1);
+        tags.splice(index, 1);
       }
     });
   }
@@ -74,7 +74,7 @@ const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems
       name: "activePage",
     });
     spliceArray();
-    tagsList.push({ value: item.value, label });
+    tags.push({ value: item.value, label });
     searchParams.set(label, item.value);
     setSearchParams(searchParams);
   }

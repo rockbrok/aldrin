@@ -27,6 +27,7 @@ const ContextProvider = ({ children }: any) => {
     isIDRoute: false,
     maxCards: 12,
     activePage: 1,
+    tags: [],
   }
 
   const [state, dispatch] = useReducer(reducer, initialState);
