@@ -1,9 +1,11 @@
 import { FC, useState } from 'react';
 import { SelectProps, SearchProps } from '../interfaces/Props';
-import OutsideClickHandler from "react-outside-click-handler";
 import { Sort } from "@mui/icons-material";
+import OutsideClickHandler from "react-outside-click-handler";
+// Hooks
+import { handleSelect } from '../hooks/useSelect';
 
-const Select: FC<SelectProps & SearchProps> = ({ state, label, items, setData, helper, tags, searchParams, setSearchParams }) => {
+const Select: FC<SelectProps & SearchProps> = ({ state, stateKey, label, items, setData, searchParams, setSearchParams }) => {
   const [showItems, setShowItems] = useState(false);
 
   return (
@@ -18,12 +20,10 @@ const Select: FC<SelectProps & SearchProps> = ({ state, label, items, setData, h
           bg-grey rounded-sm 
           h-11 w-full py-1"
         >
-          <button className="absolute top-0 
+          <div className="absolute top-0 
             h-11 w-full 
             flex flex-col justify-items-center
             bg-grey p-0"
-            type="button"
-            role="button"
             tabIndex={0}
             aria-haspopup="true"
             aria-expanded="false"
@@ -34,76 +34,52 @@ const Select: FC<SelectProps & SearchProps> = ({ state, label, items, setData, h
               className="ml-2 mt-3 select-none"
               style={{ fontSize: "20px" }}
             />
-            <div className="absolute flex ml-10 mt-3 select-none">
-              {helper}
+            <div className="absolute flex ml-10 mt-3 select-none capitalize">
+              {label}
             </div>
             <Items
               items={items}
               state={state}
+              stateKey={stateKey}
               setData={setData}
               showItems={showItems}
-              tags={tags}
               label={label}
               searchParams={searchParams}
               setSearchParams={setSearchParams}
             />
-          </button>
+          </div>
         </div>
       </OutsideClickHandler>
     </div>
   );
 };
 
-const Items: FC<SelectProps & SearchProps> = ({ items, state, setData, showItems, tags, label, searchParams, setSearchParams }) => {
-
-  const spliceArray = () => {
-    tags.map((item: any, index: number) => {
-      if (item.label == label) {
-        tags.splice(index, 1);
-      }
-    });
-  }
-
-  const handleChange = (item: { value: string; label: string; }) => {
-    setData({
-      payload: item.value,
-      name: label,
-    });
-    setData({
-      payload: 1,
-      name: "activePage",
-    });
-    spliceArray();
-    tags.push({ value: item.value, label });
-    searchParams.set(label, item.value);
-    setSearchParams(searchParams);
-  }
-
-  return (
-    <div
-      id={label}
-      style={{ display: showItems ? "block" : "none" }}
-      className="absolute w-full h-[201px] 
+const Items: FC<SelectProps & SearchProps> = ({ items, state, stateKey, setData, showItems, label, searchParams, setSearchParams }) => (
+  <div
+    id={label}
+    style={{ display: showItems ? "block" : "none" }}
+    className="absolute w-full h-[201px] 
       overflow-auto cursor-default
       border-2 border-b-[1px] border-grey rounded-sm
       mt-11 z-20 bg-grey"
-    >
-      {items.map((item: { label: string, value: string }, index: number) => (
-        <button
-          type="button"
-          key={index}
-          tabIndex={0}
-          onClick={item.value === state ? undefined : () => handleChange(item)}
-          className={`relative select-none bg-grey w-full
+  >
+    {items.map((item: { label: string, value: string }, index: number) => (
+      <button
+        type="button"
+        key={index}
+        tabIndex={0}
+        onClick={item.value === stateKey ? undefined : () =>
+          handleSelect({ state, setData, label, item, searchParams, setSearchParams })
+        }
+        className={`relative select-none bg-grey w-full
           border-b-[1px] border-grey rounded-sm text-left
           p-2 pl-10 cursor-pointer 
-          ${item.value == state ? "cursor-default" : "hover:bg-black hover:text-white"}`}
-        >
-          {item.label}
-        </button>
-      ))}
-    </div>
-  )
-};
+          ${item.value == stateKey ? "cursor-default" : "hover:bg-black hover:text-white"}`}
+      >
+        {item.label}
+      </button>
+    ))}
+  </div>
+);
 
 export { Select }

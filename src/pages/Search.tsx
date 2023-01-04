@@ -17,31 +17,28 @@ const Search = () => {
         <div className="grid col-span-3 grid-cols-3 gap-4">
           <Select
             items={years()}
-            tags={renderTags(state)}
             label="year"
-            helper="Year"
             setData={setData}
-            state={state.year}
+            state={state}
+            stateKey={state.year}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />
           <Select
             items={types}
-            tags={renderTags(state)}
             label="type"
-            helper="Rocket type"
             setData={setData}
-            state={state.type}
+            state={state}
+            stateKey={state.type}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />
           <Select
             items={orbits}
-            tags={renderTags(state)}
             label="orbit"
-            helper="Orbit"
             setData={setData}
-            state={state.orbit}
+            state={state}
+            stateKey={state.orbit}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />

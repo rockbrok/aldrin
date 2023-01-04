@@ -23,4 +23,12 @@ const renderTags = (state: { tags: any[]; year: number; type: string; orbit: str
   return state.tags;
 }
 
-export { renderTags }
+const spliceTags = (state: { tags: { value: string; label: string; }[]; }, label: string) => {
+  state.tags.map((item: { value: string, label: string }, index: number) => {
+    if (item.label == label) {
+      state.tags.splice(index, 1);
+    }
+  });
+}
+
+export { renderTags, spliceTags }

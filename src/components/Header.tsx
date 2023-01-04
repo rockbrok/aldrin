@@ -38,7 +38,7 @@ const Container = ({ children }: any) => (
   <div className="grid grid-cols-4 grid-flow-row auto-rows-max gap-4 col-span-4 font-medium">
     {children}
   </div>
-)
+);
 
 const Logo = () => (
   <div className="flex flex-row items-end h-9 row-span-1 col-span-2">
@@ -56,7 +56,7 @@ const Logo = () => (
       v1.6.2
     </span>
   </div>
-)
+);
 
 const Title = () => (
   <h3 className="col-span-3 mt-6 text-6xl whitespace-pre-line text-transparent tracking-tight
@@ -65,6 +65,6 @@ const Title = () => (
   >
     A search tool for spacex {`\n`}launches
   </h3>
-)
+);
 
 export { Header }

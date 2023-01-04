@@ -32,8 +32,8 @@ interface SelectProps {
   label: string;
   helper?: string;
   showItems?: boolean;
-  tags: { value: string | number | null; label: string }[];
   state: any;
+  stateKey: string;
   setData: (arg0: {
     payload: { value: string; label: string } | number | string; name: string;
   }) => void;
