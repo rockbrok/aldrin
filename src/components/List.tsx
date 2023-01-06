@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 // Components
 import { Empty, Error } from './Response';
 // Hooks
-import { useCardCount } from '../hooks/useCardCount';
+import { cardCount } from '../hooks/useCardCount';
 import { getLaunchName } from '../hooks/useLaunchMap';
 
 const List: FC<QueryProps> = ({ launches, state }) => {
@@ -61,7 +61,7 @@ const Card = (props: { children?: ReactFragment; className?: any, click?: MouseE
 
 const Loading = ({ launches, state }: any) => (
   <Grid className="mb-16">
-    {Array.from({ length: useCardCount({ launches, state }) }, (_, index) =>
+    {Array.from({ length: cardCount({ launches, state }) }, (_, index) =>
       <Card
         key={index}
         className="animate-pulse pt-16"

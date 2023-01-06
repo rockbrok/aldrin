@@ -17,7 +17,7 @@ const reducer = (state: any, action: { type: string, name: string, payload: obje
 }
 
 const ContextProvider = ({ children }: any) => {
-  const params = new URLSearchParams(document.location.search)
+  const params = new URLSearchParams(window.location.search);
 
   const initialState = {
     orbit: params.get("orbit") ?? "",

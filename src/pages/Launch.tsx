@@ -19,8 +19,8 @@ import { getLaunchID } from '../hooks/useLaunchMap';
 
 const Launch = () => {
   const location = useLocation();
-  const pathname = location.pathname.replace('/search/', '');
-  const launch = findLaunch(getLaunchID(pathname));
+  const path = location.pathname.replace('/search/', '');
+  const launch = findLaunch(getLaunchID(path));
 
   switch (true) {
     case launch.loading:

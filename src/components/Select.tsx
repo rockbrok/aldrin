@@ -10,20 +10,12 @@ const Select: FC<SelectProps & SearchProps> = ({ state, stateKey, label, items, 
 
   return (
     <div className="flex flex-col gap-0.5">
-      <OutsideClickHandler
-        onOutsideClick={() => {
-          setShowItems(false);
-        }}
-      >
-        <div className="relative cursor-pointer 
-          flex flex-row items-center 
-          bg-grey rounded-sm 
-          h-11 w-full py-1"
+      <OutsideClickHandler onOutsideClick={() => setShowItems(false)}>
+        <div className="relative cursor-pointer flex flex-row items-center 
+          bg-grey rounded-sm h-11 w-full py-1"
         >
-          <div className="absolute top-0 
-            h-11 w-full 
-            flex flex-col justify-items-center
-            bg-grey p-0"
+          <div className="absolute top-0 h-11 w-full 
+            flex flex-col justify-items-center bg-grey p-0"
             tabIndex={0}
             aria-haspopup="true"
             aria-expanded="false"
