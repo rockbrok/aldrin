@@ -1,9 +1,9 @@
 import { FC, MouseEventHandler, ReactFragment } from 'react'
 import { QueryProps } from '../interfaces/Props';
-import { RocketLaunch, Error, Block } from '@mui/icons-material';
+import { RocketLaunch } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 // Components
-import { IconWrapper } from './IconWrapper';
+import { Empty, Error } from './Response';
 // Hooks
 import { useCardCount } from '../hooks/useCardCount';
 import { getLaunchName } from '../hooks/useLaunchMap';
@@ -12,37 +12,16 @@ const List: FC<QueryProps> = ({ launches, state }) => {
 
   switch (true) {
     case launches.loading:
-      return (
-        <Grid className="mb-16">
-          {Array.from({ length: useCardCount({ launches, state }) }, (_, index) =>
-            <Card
-              key={index}
-              className="animate-pulse pt-16"
-            >
-              <span className="w-full h-5 mb-2 bg-grey rounded-sm" />
-              <span className="w-10/12 h-5 bg-grey rounded-sm" />
-            </Card>
-          )}
-        </Grid>
-      );
+      return <Loading launches={launches} state={state} />;
     case launches.error:
-      return (
-        <IconWrapper>
-          <Error />
-          {launches.error}
-        </IconWrapper>
-      );
-    case launches.data.launchesPastResult.result.totalCount === 0:
-      return (
-        <IconWrapper>
-          <Block />
-          No data
-        </IconWrapper>
-      );
-    default:
+      return <Error />;
+    case launches.data == undefined:
+      return <Empty />;
+    default: {
+      const data = launches.data.launchesPastResult.data;
       return (
         <Grid>
-          {launches.data.launchesPastResult.data.map((data: { mission_name: string; id: string; }, index: number) => (
+          {data.map((data: { mission_name: string; id: string; }, index: number) => (
             <Link
               to={`/search/${getLaunchName(data)}`}
               state={{ id: data.id }}
@@ -59,6 +38,7 @@ const List: FC<QueryProps> = ({ launches, state }) => {
           ))}
         </Grid>
       );
+    }
   }
 };
 
@@ -77,6 +57,20 @@ const Card = (props: { children?: ReactFragment; className?: any, click?: MouseE
   >
     {props.children}
   </div>
+);
+
+const Loading = ({ launches, state }: any) => (
+  <Grid className="mb-16">
+    {Array.from({ length: useCardCount({ launches, state }) }, (_, index) =>
+      <Card
+        key={index}
+        className="animate-pulse pt-16"
+      >
+        <span className="w-full h-5 mb-2 bg-grey rounded-sm" />
+        <span className="w-10/12 h-5 bg-grey rounded-sm" />
+      </Card>
+    )}
+  </Grid>
 );
 
 export { List }

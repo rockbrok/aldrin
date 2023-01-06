@@ -6,9 +6,12 @@ import { List } from '../components/List';
 import { Pagination } from "../components/Pagination";
 // Data
 import { years, types, orbits } from '../data/SelectData';
+// Hooks
+import { getLaunches } from '../hooks/useLaunches';
 
 const Search = () => {
-  const [launches, state, setData, searchParams, setSearchParams]: any = useOutletContext();
+  const [state, setData, searchParams, setSearchParams]: any = useOutletContext();
+  const launches = getLaunches(state);
 
   return (
     <>

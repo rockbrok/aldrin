@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom'
 import { useContext } from 'react';
 import { Context } from './context/Context';
-import { getLaunches } from './hooks/useLaunches';
 // Pages
 import { Search } from "./pages/Search";
 import { Launch } from "./pages/Launch";
@@ -23,16 +22,14 @@ const App = () => {
         <Route path="/search/:id" element={<Launch />} />
       </Route>
     )
-  )
-  return (
-    <RouterProvider router={router} />
-  )
+  );
+
+  return <RouterProvider router={router} />;
 };
 
 const Root = () => {
   const { state, setData } = useContext(Context);
   const [searchParams, setSearchParams] = useSearchParams({});
-  const launches = getLaunches(state);
 
   return (
     <>
@@ -43,13 +40,7 @@ const Root = () => {
         setSearchParams={setSearchParams}
       />
       <main className="my-4 w-[900px]">
-        <Outlet context={[
-          launches,
-          state,
-          setData,
-          searchParams,
-          setSearchParams
-        ]} />
+        <Outlet context={[state, setData, searchParams, setSearchParams]} />
       </main>
     </>
   )

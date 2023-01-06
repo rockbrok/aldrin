@@ -1,4 +1,4 @@
-import { findLaunch } from '../hooks/useLaunches';
+
 import { ReactElement } from 'react';
 import {
   Assignment,
@@ -7,43 +7,30 @@ import {
   PinDrop,
   CalendarMonth,
   Public,
-  TaskAlt,
-  Error,
-  Cached,
-  Block
+  TaskAlt
 } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
+import { useLocation } from 'react-router-dom';
 // Components
-import { IconWrapper } from '../components/IconWrapper';
+import { Loading, Error, Empty } from '../components/Response';
 // Hooks
+import { findLaunch } from '../hooks/useLaunches';
 import { getLaunchID } from '../hooks/useLaunchMap';
 
 const Launch = () => {
-  const pathname = window.location.pathname.split('/');
+  const location = useLocation();
+  const pathname = location.pathname.replace('/search/', '');
   const launch = findLaunch(getLaunchID(pathname));
-  const data = launch?.data?.launch;
 
   switch (true) {
     case launch.loading:
-      return (
-        <IconWrapper style="w-full mt-28">
-          <Cached className="animate-spin filter-blue" />
-        </IconWrapper>
-      );
+      return <Loading />;
     case launch.data == undefined:
-      return (
-        <IconWrapper style="w-full mt-28">
-          <Block className="filter-blue" />
-          No data
-        </IconWrapper>
-      )
+      return <Empty />;
     case Boolean(launch.error):
-      return (
-        <IconWrapper style="w-full mt-28">
-          <Error className="filter-blue" />
-        </IconWrapper>
-      );
-    default:
+      return <Error />;
+    default: {
+      const data = launch.data.launch;
       return (
         <>
           <Helmet>
@@ -73,6 +60,7 @@ const Launch = () => {
           </section>
         </>
       )
+    }
   }
 }
 
@@ -102,54 +90,58 @@ const Details = ({ data }: any) => (
       {data.details ?? "No details"}
     </p>
   </div>
-)
-
-const ItemList = ({ data }: any) => (
-  <section
-    tabIndex={0}
-    aria-label="Launch information"
-    className="flex flex-col gap-4 col-span-1 h-fit bg-grey rounded-sm p-4 py-6"
-  >
-    <Item
-      title="Rocket name"
-      icon={<Assignment />}
-      data={data.rocket.rocket_name}
-    />
-    <Item
-      title="Rocket type"
-      icon={<Rocket />}
-      data={data.rocket.rocket_type}
-    />
-    <Item
-      title="Nationality"
-      icon={<Language />}
-      data={data.rocket.second_stage.payloads[0].nationality}
-    />
-    <Item
-      title="Launch site"
-      icon={<PinDrop />}
-      data={data.launch_site.site_name}
-    />
-    <Item
-      title="Launch year"
-      icon={<CalendarMonth />}
-      data={data.launch_year}
-    />
-    <Item
-      title="Orbit"
-      icon={<Public />}
-      data={
-        data.rocket.second_stage.payloads[0].orbit_params.regime === null ? "Unknown" :
-          data.rocket.second_stage.payloads[0].orbit_params.regime.replaceAll('-', ' ')
-      }
-    />
-    <Item
-      title="Status"
-      icon={<TaskAlt />}
-      data={data.launch_success === true ? "Success" : "Failure"}
-    />
-  </section>
 );
+
+const ItemList = ({ data }: any) => {
+  const payload = data.rocket.second_stage.payloads[0];
+
+  const orbit = payload.orbit_params.regime === null ?
+    "Unknown" : payload.orbit_params.regime.replaceAll('-', ' ');
+
+  return (
+    <section
+      tabIndex={0}
+      aria-label="Launch information"
+      className="flex flex-col gap-4 col-span-1 h-fit bg-grey rounded-sm p-4 py-6"
+    >
+      <Item
+        title="Rocket name"
+        icon={<Assignment />}
+        data={data.rocket.rocket_name}
+      />
+      <Item
+        title="Rocket type"
+        icon={<Rocket />}
+        data={data.rocket.rocket_type}
+      />
+      <Item
+        title="Nationality"
+        icon={<Language />}
+        data={payload.nationality}
+      />
+      <Item
+        title="Launch site"
+        icon={<PinDrop />}
+        data={data.launch_site.site_name}
+      />
+      <Item
+        title="Launch year"
+        icon={<CalendarMonth />}
+        data={data.launch_year}
+      />
+      <Item
+        title="Orbit"
+        icon={<Public />}
+        data={orbit}
+      />
+      <Item
+        title="Status"
+        icon={<TaskAlt />}
+        data={data.launch_success === true ? "Success" : "Failure"}
+      />
+    </section>
+  )
+}
 
 const Item = (props: { data: string; icon: ReactElement; title: string; }) => (
   <div

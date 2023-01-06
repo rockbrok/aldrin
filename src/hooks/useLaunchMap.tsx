@@ -6,9 +6,9 @@ const getLaunchName = (data: any) => {
   }
 }
 
-const getLaunchID = (pathname: string[]) => {
+const getLaunchID = (pathname: string) => {
   for (let i = 0; i < LaunchMap.length; i++) {
-    if (LaunchMap[i].name.match(pathname[2])) return String(LaunchMap[i].id);
+    if (LaunchMap[i].name.match(pathname)) return String(LaunchMap[i].id);
   }
 }
 
